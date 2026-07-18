@@ -9,6 +9,22 @@
   html { scroll-behavior: smooth; scroll-padding-top: 65px; }
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f5f0e8; color: #1e293b; line-height: 1.65; }
 
+  /* === PROGRESS BAR === */
+  #progressBar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #3b82f6); z-index: 999; width: 0%; transition: width 0.1s; }
+
+  /* === TOAST === */
+  #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; max-width: 340px; }
+  .toast { background: #0f172a; color: white; padding: 12px 18px; border-radius: 12px; font-size: 0.85em; box-shadow: 0 4px 16px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards; }
+  .toast.success { border-left: 4px solid #22c55e; }
+  .toast.info { border-left: 4px solid #3b82f6; }
+  .toast.warn { border-left: 4px solid #f59e0b; }
+  @keyframes toastIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
+  /* === BACK TO TOP === */
+  #backToTop { position: fixed; bottom: 20px; left: 20px; width: 44px; height: 44px; background: #0f172a; color: white; border: none; border-radius: 50%; font-size: 1.2em; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 100; display: none; align-items: center; justify-content: center; transition: 0.2s; }
+  #backToTop:hover { background: #1e3a5f; transform: translateY(-2px); }
+
   /* === NAV === */
   nav { position: sticky; top: 0; z-index: 100; background: #0f172a; color: white; padding: 0 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 2px; overflow-x: auto; min-height: 52px; }
   nav .logo { font-weight: 800; font-size: 0.9em; white-space: nowrap; margin-right: 8px; color: #f59e0b; }
@@ -185,6 +201,12 @@
 </style>
 </head>
 <body>
+<!-- Progress bar -->
+<div id="progressBar"></div>
+<!-- Toast container -->
+<div id="toastContainer"></div>
+<!-- Back to top -->
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
 
 <!-- ===== NAV ===== -->
 <nav>
@@ -972,6 +994,133 @@ document.addEventListener('DOMContentLoaded', () => {
   if (notes) document.getElementById('notesContent').value = notes;
   renderProgression();
   renderProgrammation();
+});
+
+// ===== TOAST NOTIFICATIONS =====
+function toast(msg, type = 'success') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// Replace inline save messages with toasts
+const origSaveCJ = saveCJ;
+saveCJ = function() {
+  const date = document.getElementById('cjDate').value;
+  const matiere = document.getElementById('cjMatiere').value;
+  const seance = document.getElementById('cjSeance').value.trim();
+  const content = document.getElementById('cjContent').value.trim();
+  if (!date || !content) { toast('❌ Remplis la date et le contenu', 'warn'); return; }
+  const entries = JSON.parse(localStorage.getItem('ee_cj') || '[]');
+  entries.unshift({ id: Date.now(), date, matiere, seance, content });
+  localStorage.setItem('ee_cj', JSON.stringify(entries));
+  document.getElementById('cjContent').value = '';
+  document.getElementById('cjSeance').value = '';
+  renderCJ();
+  toast('✅ Séance enregistrée (' + date + ')');
+};
+
+const origSaveNotes = saveNotes;
+saveNotes = function() {
+  const content = document.getElementById('notesContent').value;
+  localStorage.setItem('ee_notes', content);
+  toast('✅ Notes sauvegardées');
+};
+
+const origSaveEdt = saveEdt;
+saveEdt = function() {
+  toast('✅ Emploi du temps sauvegardé');
+};
+
+const origSaveProgression = saveProgression;
+saveProgression = function() {
+  toast('✅ Progression sauvegardée');
+};
+
+const origSaveProgrammation = saveProgrammation;
+saveProgrammation = function() {
+  toast('✅ Programmation sauvegardée');
+};
+
+// ===== PROGRESS BAR =====
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('backToTop').style.display = h.scrollTop > 400 ? 'flex' : 'none';
+});
+
+// ===== EXPORT / IMPORT DATA =====
+function exportData() {
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('ee_'));
+  const data = {};
+  keys.forEach(k => { data[k] = JSON.parse(localStorage.getItem(k)); });
+  data._exportedAt = new Date().toISOString();
+  data._site = 'cm2-naufrages';
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'sauvegarde-cm2-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📦 Données exportées');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        const data = JSON.parse(ev.target.result);
+        let count = 0;
+        Object.keys(data).forEach(k => {
+          if (k.startsWith('ee_')) {
+            localStorage.setItem(k, JSON.stringify(data[k]));
+            count++;
+          }
+        });
+        // Re-render everything
+        renderCJ();
+        renderProgression();
+        renderProgrammation();
+        initEdt();
+        renderEdt();
+        const notes = localStorage.getItem('ee_notes');
+        if (notes) document.getElementById('notesContent').value = notes;
+        toast('✅ ' + count + ' éléments restaurés');
+      } catch(e) {
+        toast('❌ Fichier invalide', 'warn');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// ===== ADD EXPORT/IMPORT TO THE TEACHER PANEL =====
+// Add buttons after section title
+document.addEventListener('DOMContentLoaded', () => {
+  const enseignantSection = document.getElementById('enseignant');
+  if (enseignantSection) {
+    const title = enseignantSection.querySelector('.section-title');
+    const btns = document.createElement('div');
+    btns.style.cssText = 'margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;';
+    btns.innerHTML = `
+      <button onclick="exportData()" class="ee-btn small" style="background:#0f172a;color:white;">📤 Exporter</button>
+      <button onclick="importData()" class="ee-btn small" style="background:#0f172a;color:white;">📥 Importer</button>
+    `;
+    title.appendChild(btns);
+  }
 });
 
 // ===== NAVIGATION ACTIVE =====
