@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Naufragés de l'Îlot Perdu — Espace Enseignant CM2</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 65px; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f5f0e8; color: #1e293b; line-height: 1.65; }
+
+  /* === NAV === */
+  nav { position: sticky; top: 0; z-index: 100; background: #0f172a; color: white; padding: 0 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 2px; overflow-x: auto; min-height: 52px; }
+  nav .logo { font-weight: 800; font-size: 0.9em; white-space: nowrap; margin-right: 8px; color: #f59e0b; }
+  nav a { color: #cbd5e1; text-decoration: none; padding: 6px 10px; border-radius: 6px; font-size: 0.78em; font-weight: 500; white-space: nowrap; transition: 0.15s; }
+  nav a:hover, nav a.active { background: rgba(255,255,255,0.1); color: white; }
+  nav .spacer { flex: 1; }
+  nav .nav-group { display: flex; gap: 2px; align-items: center; }
+  nav .nav-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.15); margin: 0 4px; }
+
+  /* === HERO === */
+  .hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f172a 100%); color: white; padding: 50px 20px 40px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+  .hero h1 { font-size: 2em; font-weight: 800; position: relative; }
+  .hero .wave { font-size: 2.4em; display: block; margin-bottom: 2px; }
+  .hero .sub { font-size: 1em; color: #93c5fd; margin-top: 4px; position: relative; }
+  .hero .meta { font-size: 0.8em; color: #94a3b8; margin-top: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; position: relative; }
+  .hero .meta span { background: rgba(255,255,255,0.08); padding: 3px 12px; border-radius: 20px; }
+
+  /* === CONTAINER === */
+  .container { max-width: 1050px; margin: 0 auto; padding: 24px 14px; }
+
+  /* === SECTION === */
+  section { background: white; border-radius: 14px; padding: 24px 26px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; scroll-margin-top: 70px; }
+  .section-title { font-size: 1.15em; font-weight: 700; color: #0f172a; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 3px solid #f59e0b; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .section-title .anchor { color: #94a3b8; font-size: 0.7em; text-decoration: none; opacity: 0; transition: 0.2s; }
+  section:hover .section-title .anchor { opacity: 1; }
+  .section-title .badge { font-size: 0.55em; padding: 2px 10px; border-radius: 10px; font-weight: 600; }
+  .badge.blue { background: #dbeafe; color: #1e40af; }
+  .badge.green { background: #d1fae5; color: #065f46; }
+  .badge.orange { background: #fef3c7; color: #92400e; }
+
+  /* === ACCORDION === */
+  details { margin: 6px 0; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+  details summary { padding: 12px 16px; font-weight: 600; cursor: pointer; background: #f8fafc; display: flex; align-items: center; gap: 8px; user-select: none; transition: 0.15s; font-size: 0.93em; }
+  details summary:hover { background: #f1f5f9; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: '▶'; font-size: 0.75em; color: #94a3b8; transition: 0.2s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .body { padding: 14px 18px; font-size: 0.93em; }
+
+  /* === TABLE === */
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 0.88em; }
+  th { background: #f1f5f9; padding: 7px 9px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 600; font-size: 0.9em; }
+  td { padding: 6px 9px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  tr:hover { background: #f8fafc; }
+
+  /* === BOXES === */
+  .box { padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 8px 0; font-size: 0.9em; }
+  .box.blue { background: #eff6ff; border-left: 4px solid #3b82f6; }
+  .box.yellow { background: #fffbeb; border-left: 4px solid #f59e0b; }
+  .box.green { background: #f0fdf4; border-left: 4px solid #22c55e; }
+  .box.red { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .box.purple { background: #f5f3ff; border-left: 4px solid #8b5cf6; }
+
+  /* === GRIDS === */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  .grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 6px; }
+  .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+  .card h4 { font-size: 0.9em; font-weight: 700; margin-bottom: 4px; }
+  .card ul { font-size: 0.85em; margin: 4px 0 0 16px; color: #475569; }
+  .char-card { text-align: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; }
+  .char-card .avatar { font-size: 2.2em; }
+
+  /* === DIFF === */
+  .diff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .diff-card { border-radius: 8px; padding: 12px 14px; border: 1px solid; }
+  .diff-card.n1 { background: #fef2f2; border-color: #fecaca; }
+  .diff-card.n2 { background: #fffbeb; border-color: #fde68a; }
+  .diff-card.n3 { background: #f0fdf4; border-color: #86efac; }
+  .diff-card .level { font-weight: 800; font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .diff-card.n1 .level { color: #dc2626; }
+  .diff-card.n2 .level { color: #d97706; }
+  .diff-card.n3 .level { color: #16a34a; }
+  .diff-card ul { font-size: 0.85em; margin: 4px 0 0 16px; }
+
+  .prologue { background: #faf5eb; border: 1px solid #d4c5a9; border-radius: 10px; padding: 16px 20px; margin: 8px 0; font-style: italic; line-height: 1.6; color: #3d2e1a; font-size: 0.93em; }
+
+  .mur-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+  .mur-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
+  .mur-card h4 { font-size: 0.85em; margin-bottom: 4px; }
+  .mur-card ul { list-style: none; padding: 0; font-size: 0.8em; }
+  .mur-card ul li { padding: 2px 0; }
+
+  .tag { display: inline-block; font-size: 0.6em; padding: 2px 8px; border-radius: 8px; font-weight: 600; }
+  .tag.p1 { background: #fee2e2; color: #991b1b; }
+  .tag.p2 { background: #dbeafe; color: #1e40af; }
+  .tag.p3 { background: #f3e8ff; color: #6b21a8; }
+  .tag.p4 { background: #fef3c7; color: #92400e; }
+  .tag.p5 { background: #d1fae5; color: #065f46; }
+
+  .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 6px; }
+  .plan-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; text-align: center; }
+  .plan-cell .periode { font-weight: 800; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.5px; }
+  .plan-cell .proj { font-size: 0.82em; margin: 2px 0; }
+  .plan-cell .parole { font-size: 0.72em; color: #64748b; }
+  .plan-cell.p1 { border-top: 3px solid #ef4444; }
+  .plan-cell.p2 { border-top: 3px solid #3b82f6; }
+  .plan-cell.p3 { border-top: 3px solid #8b5cf6; }
+  .plan-cell.p4 { border-top: 3px solid #f59e0b; }
+  .plan-cell.p5 { border-top: 3px solid #22c55e; }
+
+  .chk { list-style: none; padding: 0; }
+  .chk li { padding: 4px 0 4px 24px; position: relative; border-bottom: 1px solid #f1f5f9; font-size: 0.87em; }
+  .chk li::before { content: '\2610'; position: absolute; left: 0; font-size: 1.1em; color: #94a3b8; }
+
+  /* ========== ESPACE ENSEIGNANT ========== */
+  .ee-tabs { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; border-bottom: 2px solid #e2e8f0; padding-bottom: 2px; }
+  .ee-tab { padding: 8px 18px; border: 1px solid transparent; border-radius: 10px 10px 0 0; cursor: pointer; font-weight: 600; font-size: 0.85em; background: transparent; color: #64748b; transition: 0.15s; margin-bottom: -2px; }
+  .ee-tab:hover { background: #f1f5f9; color: #0f172a; }
+  .ee-tab.active { background: white; border-color: #e2e8f0 #e2e8f0 white; color: #0f172a; }
+  .ee-panel { display: none; }
+  .ee-panel.active { display: block; }
+
+  .ee-input { width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.9em; font-family: inherit; margin: 4px 0; }
+  .ee-textarea { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.9em; font-family: inherit; min-height: 120px; resize: vertical; margin: 4px 0; }
+  .ee-btn { padding: 7px 18px; border: none; border-radius: 8px; font-weight: 600; font-size: 0.85em; cursor: pointer; transition: 0.15s; }
+  .ee-btn.primary { background: #0f172a; color: white; }
+  .ee-btn.primary:hover { background: #1e3a5f; }
+  .ee-btn.danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+  .ee-btn.danger:hover { background: #fee2e2; }
+  .ee-btn.success { background: #f0fdf4; color: #16a34a; border: 1px solid #86efac; }
+  .ee-btn.small { padding: 4px 10px; font-size: 0.75em; }
+  .ee-saved { font-size: 0.75em; color: #16a34a; opacity: 0; transition: 0.3s; }
+  .ee-saved.show { opacity: 1; }
+
+  .ee-entry { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; margin: 6px 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .ee-entry .meta { font-size: 0.75em; color: #64748b; }
+  .ee-entry .content { flex: 1; font-size: 0.88em; }
+  .ee-entry .actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+  .edt-grid { display: grid; grid-template-columns: 80px repeat(5, 1fr); gap: 2px; font-size: 0.8em; margin: 8px 0; }
+  .edt-header { background: #0f172a; color: white; padding: 6px; text-align: center; font-weight: 600; border-radius: 4px 4px 0 0; }
+  .edt-time { background: #f1f5f9; padding: 6px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+  .edt-cell { background: #f8fafc; border: 1px solid #e2e8f0; padding: 4px; min-height: 40px; }
+  .edt-cell input { width: 100%; border: none; background: transparent; font-size: 0.78em; padding: 2px; outline: none; }
+  .edt-cell input:focus { background: #eff6ff; }
+  .edt-cell .sub { font-size: 0.65em; color: #94a3b8; }
+
+  .prog-bar { display: flex; height: 28px; border-radius: 14px; overflow: hidden; margin: 6px 0; }
+  .prog-bar div { display: flex; align-items: center; justify-content: center; font-size: 0.65em; font-weight: 700; color: white; }
+  .prog-bar .p1 { background: #ef4444; }
+  .prog-bar .p2 { background: #3b82f6; }
+  .prog-bar .p3 { background: #8b5cf6; }
+  .prog-bar .p4 { background: #f59e0b; }
+  .prog-bar .p5 { background: #22c55e; }
+
+  footer { text-align: center; padding: 24px 14px; color: #94a3b8; font-size: 0.78em; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.4em; }
+    section { padding: 16px 14px; }
+    nav a { padding: 4px 6px; font-size: 0.7em; }
+    .edt-grid { grid-template-columns: 50px repeat(5, 1fr); font-size: 0.65em; }
+    .ee-tab { padding: 6px 12px; font-size: 0.75em; }
+  }
+
+  @media print {
+    nav { display: none; }
+    .hero { padding: 16px; border-radius: 0; }
+    body { background: white; }
+    section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+    details[open] summary::before { content: ''; }
+    details summary { background: none; }
+    .btn-top { display: none; }
+  }
+
+  .btn-top { text-align: center; margin-bottom: 14px; }
+  .btn-top button { display: inline-block; padding: 8px 20px; background: #0f172a; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 0.82em; cursor: pointer; margin: 3px; }
+  .btn-top button:hover { background: #1e3a5f; }
+  .btn-top button.outline { background: transparent; border: 2px solid #0f172a; color: #0f172a; }
+  .btn-top button.outline:hover { background: #0f172a; color: white; }
+  @media print { .btn-top { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <span class="logo">🏝️</span>
+  <span class="nav-group">
+    <a href="#accueil">Accueil</a>
+    <a href="#contexte">Contexte</a>
+    <a href="#annuel">Plan</a>
+    <a href="#p1">P1</a>
+    <a href="#p2">P2</a>
+    <a href="#p3">P3</a>
+    <a href="#p4">P4</a>
+    <a href="#p5">P5</a>
+    <a href="#outils">Outils</a>
+  </span>
+  <span class="nav-sep"></span>
+  <span class="nav-group">
+    <a href="#enseignant" style="color:#f59e0b;font-weight:700;">👨‍🏫 Mon espace</a>
+  </span>
+  <span class="spacer"></span>
+  <a href="#" onclick="window.print()">🖨️</a>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="accueil" style="border:none;box-shadow:none;background:transparent;padding:0;">
+  <div class="hero">
+    <span class="wave">⛵</span>
+    <h1>Les Naufragés de l'Îlot Perdu</h1>
+    <p class="sub">Projet CM2 • Enseignement Explicite • Espace Enseignant</p>
+    <div class="meta">
+      <span>👨‍🏫 Jacques Hassani Moustoifa</span>
+      <span>📍 SEGPA M'Tsamboro, Mayotte</span>
+      <span>🎯 CAPPEI VAE</span>
+      <span>🔁 Rotation 2 sem.</span>
+      <span>👥 23 élèves</span>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+<div class="btn-top">
+  <button onclick="window.print()">🖨️ Imprimer</button>
+  <button class="outline" onclick="expandAll()">📂 Tout déplier</button>
+  <button class="outline" onclick="collapseAll()">📁 Tout replier</button>
+</div>
+
+<script>
+function expandAll() { document.querySelectorAll('details').forEach(d => d.open = true); }
+function collapseAll() { document.querySelectorAll('details').forEach(d => d.open = false); }
+</script>
+
+<!-- ============================================================ -->
+<!-- ESPACE ENSEIGNANT — CAHIER JOURNAL + EDT + PROGRESSION -->
+<!-- ============================================================ -->
+<section id="enseignant">
+  <div class="section-title">
+    👨‍🏫 Mon espace enseignant <a class="anchor" href="#enseignant">#</a>
+    <span class="badge blue">Sauvegarde automatique</span>
+    <span class="badge green">100% local</span>
+  </div>
+  <p style="font-size:0.88em;color:#64748b;margin-bottom:12px;">
+    Cahier journal, emploi du temps, progression et programmation. 
+    Tout est sauvegardé automatiquement dans votre navigateur (localStorage).
+    <strong>Rien ne part sur internet.</strong>
+  </p>
+
+  <!-- Onglets -->
+  <div class="ee-tabs" id="eeTabs">
+    <div class="ee-tab active" data-tab="cj">📋 Cahier journal</div>
+    <div class="ee-tab" data-tab="edt">📅 Emploi du temps</div>
+    <div class="ee-tab" data-tab="prog">📈 Progression</div>
+    <div class="ee-tab" data-tab="progrm">📝 Programmation</div>
+    <div class="ee-tab" data-tab="notes">📌 Notes & idées</div>
+  </div>
+
+  <!-- ===== PANEL CAHIER JOURNAL ===== -->
+  <div class="ee-panel active" id="panel-cj">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+      <input type="date" id="cjDate" class="ee-input" style="width:auto;flex:0 0 170px;" value="">
+      <select id="cjMatiere" class="ee-input" style="width:auto;flex:0 0 140px;">
+        <option value="Français">Français</option>
+        <option value="Mathématiques">Mathématiques</option>
+        <option value="Projet livre">📖 Projet livre</option>
+        <option value="Projet période">🎯 Projet période</option>
+        <option value="Fluence">🎤 Fluence</option>
+        <option value="Lecture">📚 Lecture</option>
+        <option value="Sciences">🔬 Sciences</option>
+        <option value="Histoire-Géo">🌍 Histoire-Géo</option>
+        <option value="Arts">🎨 Arts</option>
+        <option value="EPS">🏃 EPS</option>
+        <option value="Autre">Autre</option>
+      </select>
+      <input type="text" id="cjSeance" class="ee-input" style="width:auto;flex:1;min-width:120px;" placeholder="Titre de la séance...">
+    </div>
+    <textarea id="cjContent" class="ee-textarea" placeholder="Décrivez la séance : objectifs, déroulement, observations, élèves en difficulté..."></textarea>
+    <div style="display:flex;gap:6px;margin:6px 0;flex-wrap:wrap;align-items:center;">
+      <button class="ee-btn primary" onclick="saveCJ()">💾 Enregistrer la séance</button>
+      <span class="ee-saved" id="cjSaved">✓ Sauvegardé</span>
+    </div>
+    <div style="margin-top:14px;">
+      <h4 style="font-size:0.9em;margin-bottom:6px;">📋 Séances enregistrées</h4>
+      <div style="max-height:400px;overflow-y:auto;" id="cjList"></div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL EMPLOI DU TEMPS ===== -->
+  <div class="ee-panel" id="panel-edt">
+    <p style="font-size:0.85em;color:#64748b;margin-bottom:8px;">
+      🔁 <strong>Rotation :</strong> 2 sem. matin → 2 sem. après-midi. Cliquez dans les cases pour modifier.
+    </p>
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+      <button class="ee-btn primary small" onclick="showEdt('matin')">🔆 Bloc matin</button>
+      <button class="ee-btn small" onclick="showEdt('aprem')" style="background:#f1f5f9;">🌙 Bloc après-midi</button>
+      <button class="ee-btn success small" onclick="saveEdt()">💾 Enregistrer EDT</button>
+      <span class="ee-saved" id="edtSaved">✓ Sauvegardé</span>
+    </div>
+    <div id="edtContainer"></div>
+  </div>
+
+  <!-- ===== PANEL PROGRESSION ===== -->
+  <div class="ee-panel" id="panel-prog">
+    <p style="font-size:0.85em;color:#64748b;margin-bottom:8px;">
+      Progression annuelle CM2 — cliquez pour éditer une case, les données sont sauvegardées.
+    </p>
+    <button class="ee-btn primary small" onclick="saveProgression()">💾 Enregistrer progression</button>
+    <span class="ee-saved" id="progSaved">✓ Sauvegardé</span>
+    <div id="progContainer" style="margin-top:10px;overflow-x:auto;"></div>
+  </div>
+
+  <!-- ===== PANEL PROGRAMMATION ===== -->
+  <div class="ee-panel" id="panel-progrm">
+    <p style="font-size:0.85em;color:#64748b;margin-bottom:8px;">
+      Programmation des 5 périodes — vue d'ensemble modifiable.
+    </p>
+    <button class="ee-btn primary small" onclick="saveProgrammation()">💾 Enregistrer</button>
+    <span class="ee-saved" id="progrmSaved">✓ Sauvegardé</span>
+    <div id="progrmContainer" style="margin-top:10px;overflow-x:auto;"></div>
+  </div>
+
+  <!-- ===== PANEL NOTES ===== -->
+  <div class="ee-panel" id="panel-notes">
+    <p style="font-size:0.85em;color:#64748b;margin-bottom:8px;">
+      Notes pédagogiques, idées, réflexions pour le CAPPEI VAE.
+    </p>
+    <textarea id="notesContent" class="ee-textarea" style="min-height:200px;" placeholder="Écrivez vos notes ici..."></textarea>
+    <div style="display:flex;gap:6px;margin:6px 0;align-items:center;">
+      <button class="ee-btn primary" onclick="saveNotes()">💾 Enregistrer</button>
+      <span class="ee-saved" id="notesSaved">✓ Sauvegardé</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CONTEXTE CAPPEI VAE -->
+<!-- ============================================================ -->
+<section id="contexte">
+  <div class="section-title">🏫 Contexte d'exercice <a class="anchor" href="#contexte">#</a></div>
+
+  <details>
+    <summary>📋 Contexte et public</summary>
+    <div class="body">
+      <table>
+        <tr><td style="width:160px;"><strong>Établissement</strong></td><td>SEGPA Collège de M'Tsamboro, Mayotte (REP+)</td></tr>
+        <tr><td><strong>Classe</strong></td><td>CM2 — 23 élèves</td></tr>
+        <tr><td><strong>Méthode</strong></td><td>Enseignement Explicite</td></tr>
+        <tr><td><strong>Besoins</strong></td><td>Hétérogénéité forte — contexte plurilingue — 1 élève à lenteur graphique</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary>🔄 Organisation rotation (24h/semaine)</summary>
+    <div class="body">
+      <table>
+        <tr><th>Bloc</th><th>Semaines</th><th>Lun→Jeu</th><th>Ven</th><th>Vol./sem.</th></tr>
+        <tr><td><strong>🔆 Matin</strong></td><td>2 sem.</td><td>07h-12h</td><td>07h-11h</td><td><strong>24h</strong></td></tr>
+        <tr><td><strong>🌙 Après-midi</strong></td><td>2 sem.</td><td>13h-17h</td><td>13h-16h</td><td><strong>24h</strong></td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary>🎯 Différenciation 3 niveaux</summary>
+    <div class="body">
+      <table>
+        <tr><th>Niveau</th><th>Public</th><th>Stratégie</th></tr>
+        <tr><td><span style="color:#dc2626;font-weight:700;">🔴 N1 Guidé</span></td><td>Fragiles</td><td>Phrases imposées, mots-clés, structure cadrée</td></tr>
+        <tr><td><span style="color:#d97706;font-weight:700;">🟡 N2 Standard</span></td><td>Majorité</td><td>Consigne ouverte + contraintes lexicales</td></tr>
+        <tr><td><span style="color:#16a34a;font-weight:700;">🟢 N3 Défi</span></td><td>Avancés</td><td>Contraintes stylistiques (dialogues, pensées intérieures)</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary>♿ Adaptation lenteur graphique</summary>
+    <div class="body">
+      <div class="box red"><strong>Principe :</strong> Baisser la charge d'écriture, jamais l'exigence intellectuelle.</div>
+      <table>
+        <tr><th>Domaine</th><th>Adaptation</th></tr>
+        <tr><td>Prise de notes</td><td>Fiches pré-remplies, schémas à légender</td></tr>
+        <tr><td>Questions</td><td>Imprimées — réponses QCM, textes à trous, étiquettes</td></tr>
+        <tr><td>Évaluation</td><td>Priorité à l'oral</td></tr>
+        <tr><td>Projet écriture</td><td>Rôle : gardien des mots, illustrateur, cartographe, narrateur</td></tr>
+      </table>
+    </div>
+  </details>
+</section>
+
+<!-- ============================================================ -->
+<!-- PLAN ANNUEL -->
+<!-- ============================================================ -->
+<section id="annuel">
+  <div class="section-title">🗺️ Plan annuel — "Le Livre &amp; La Voix" <a class="anchor" href="#annuel">#</a></div>
+  
+  <div class="plan-grid">
+    <div class="plan-cell p1"><div class="periode" style="color:#dc2626;">P1 🎤</div><div class="proj"><strong>Chuchoteuses</strong></div><div class="parole">🔧 Technique</div><div class="parole" style="font-weight:600;">Héros + Chap.1</div></div>
+    <div class="plan-cell p2"><div class="periode" style="color:#3b82f6;">P2 🏆</div><div class="proj"><strong>Défi Lecture</strong></div><div class="parole">🎭 Interprétation</div><div class="parole" style="font-weight:600;">Chap.2-3 (eau)</div></div>
+    <div class="plan-cell p3"><div class="periode" style="color:#8b5cf6;">P3 🗺️</div><div class="proj"><strong>Cartographie</strong></div><div class="parole">🌍 Spatialisation</div><div class="parole" style="font-weight:600;">Chap.4-5 (feu)</div></div>
+    <div class="plan-cell p4"><div class="periode" style="color:#f59e0b;">P4 🎯</div><div class="proj"><strong>Éloquence</strong></div><div class="parole">🎤 Conviction</div><div class="parole" style="font-weight:600;">Chap.6-7 (tempête)</div></div>
+    <div class="plan-cell p5"><div class="periode" style="color:#22c55e;">P5 🎭</div><div class="proj"><strong>Théâtre</strong></div><div class="parole">🏆 Performance</div><div class="parole" style="font-weight:600;">Livre imprimé</div></div>
+  </div>
+
+  <div class="box blue" style="margin-top:10px;font-size:0.85em;">
+    <strong>Progression Parole :</strong> 🔧 Technique → 🎭 Interprétation → 🌍 Spatialisation → 🎤 Conviction → 🏆 Performance
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PÉRIODE 1 -->
+<!-- ============================================================ -->
+<section id="p1">
+  <div class="section-title">🎤 P1 — Fondations &amp; Chuchoteuses <a class="anchor" href="#p1">#</a></div>
+
+  <details>
+    <summary>📋 Fiche VAE + Planning 10 jours</summary>
+    <div class="body">
+      <table><tr><td style="width:160px;"><strong>Période</strong></td><td>P1 — Sept-Oct (3 blocs × 2 sem.)</td></tr>
+      <tr><td><strong>Projet court</strong></td><td>🎤 Fabrication chuchoteuses (fluence)</td></tr>
+      <tr><td><strong>Grand projet</strong></td><td>📖 Héros + Prologue + Chapitre 1</td></tr>
+      <tr><td><strong>Axe Parole</strong></td><td>🔧 Technique : fluidité, automatisation du décodage</td></tr></table>
+      <table class="bloc-table" style="margin-top:8px;">
+        <tr><th>Jour</th><th>Activité</th></tr>
+        <tr><td>Lun 1</td><td><strong>Lancement théâtral</strong> — Prologue + création des 3 héros</td></tr>
+        <tr><td>Mar 1</td><td><strong>Modelage</strong> — Mur de mots P1 + structure récit d'aventure</td></tr>
+        <tr><td>Mer 1</td><td><strong>🎤 Chuchoteuses</strong> — Fabrication + premier test</td></tr>
+        <tr><td>Jeu 1</td><td><strong>Pratique guidée</strong> — Dictée à l'adulte + premiers jets</td></tr>
+        <tr><td>Ven 1</td><td><strong>Fluence</strong> + écriture Chap.1 (début)</td></tr>
+        <tr style="background:#f8fafc;"><td>Lun 2</td><td><strong>Chap.1 (suite)</strong> — Écriture autonome différenciée</td></tr>
+        <tr style="background:#f8fafc;"><td>Mar 2</td><td><strong>Chap.1 (fin)</strong> — Mise en commun 5 groupes</td></tr>
+        <tr style="background:#f8fafc;"><td>Mer 2</td><td><strong>Relecture</strong> — Grille autocorrection + réécriture</td></tr>
+        <tr style="background:#f8fafc;"><td>Jeu 2</td><td><strong>Mise au propre</strong> — Recopie + illustration carte</td></tr>
+        <tr style="background:#f8fafc;"><td>Ven 2</td><td><strong>Clôture P1</strong> — Lecture + Jauge + bilan</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary>👥 Les 3 Héros + 📖 Prologue</summary>
+    <div class="body">
+      <div class="grid3">
+        <div class="char-card"><div class="avatar">🦁</div><h4>Le Leader</h4><span style="font-size:0.8em;">💪 Courageux ⚠️ Impulsif</span></div>
+        <div class="char-card"><div class="avatar">🧠</div><h4>L'Intellectuel</h4><span style="font-size:0.8em;">💪 Connaissances ⚠️ Froussard</span></div>
+        <div class="char-card"><div class="avatar">🛠️</div><h4>Le Débrouillard</h4><span style="font-size:0.8em;">💪 Habile ⚠️ Timide</span></div>
+      </div>
+      <div class="prologue">Le soleil se lève à peine, embrasant le ciel de nuances roses et orangées… Sur la plage, quatre silhouettes se glissent silencieusement vers la mer…</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>📝 Mur de mots + 🎯 Consignes 3 niveaux</summary>
+    <div class="body">
+      <div class="mur-grid">
+        <div class="mur-card"><h4>👁️ Regarder</h4><ul><li>scruter, balayer du regard, fixer, constater, réaliser</li></ul></div>
+        <div class="mur-card"><h4>😨 Angoisse</h4><ul><li>frisson, panique, pétrifié, gorge nouée, cœur qui s'emballe</li></ul></div>
+        <div class="mur-card"><h4>🛠️ Construire</h4><ul><li>ramasser, tresser, empiler, planter, entasser, consolider</li></ul></div>
+        <div class="mur-card"><h4>🌙 Nuit</h4><ul><li>crépuscule, obscurité, ténèbres, refuge, vulnérable</li></ul></div>
+      </div>
+      <div class="diff-grid">
+        <div class="diff-card n1"><div class="level">🔴 N1 Guidé</div><ul><li>5-7 phrases, 1 paragraphe. Utilise <em>scruter, pétrifié, ramasser</em></li></ul></div>
+        <div class="diff-card n2"><div class="level">🟡 N2 Standard</div><ul><li>2 paragraphes. 3 verbes du Mur + 2 expressions d'angoisse</li></ul></div>
+        <div class="diff-card n3"><div class="level">🟢 N3 Défi</div><ul><li>3 paragraphes. Dialogue ou pensée intérieure + présage</li></ul></div>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ============================================================ -->
+<!-- PÉRIODE 2 -->
+<!-- ============================================================ -->
+<section id="p2">
+  <div class="section-title">💧 P2 — L'Eau &amp; Défi Lecture <a class="anchor" href="#p2">#</a></div>
+  <details><summary>📋 Fiche VAE + Planning</summary><div class="body">
+    <table><tr><td><strong>Thème</strong></td><td>De la technique à l'interprétation</td></tr>
+    <tr><td><strong>Projet court</strong></td><td>🏆 Défi Lecture (vitesse/compréhension MCLM)</td></tr>
+    <tr><td><strong>Grand projet</strong></td><td>📖 Chap.2-3 : recherche d'eau douce, exploration</td></tr>
+    <tr><td><strong>Focus langue</strong></td><td>Connecteurs temporels + passé simple / imparfait</td></tr></table>
+  </div></details>
+  <details><summary>📝 Mur de mots P2</summary><div class="body">
+    <div class="mur-grid">
+      <div class="mur-card"><h4>💧 Eau</h4><ul><li>aride, source, cascade, saumâtre, nappe phréatique</li></ul></div>
+      <div class="mur-card"><h4>🌿 Végétation</h4><ul><li>végétation dense, liane, ronces, fougère, mousse</li></ul></div>
+      <div class="mur-card"><h4>⏱️ Connecteurs</h4><ul><li>soudain, au même instant, tout à coup, après un long moment</li></ul></div>
+      <div class="mur-card"><h4>🐾 Animaux</h4><ul><li>gecko, varan, crabe, oiseau rare, tortue, traces</li></ul></div>
+    </div>
+  </div></details>
+</section>
+
+<!-- ============================================================ -->
+<!-- PÉRIODE 3 -->
+<!-- ============================================================ -->
+<section id="p3">
+  <div class="section-title">🗺️ P3 — Cartographie &amp; Survie <a class="anchor" href="#p3">#</a></div>
+  <details><summary>📋 Fiche VAE + Planning</summary><div class="body">
+    <table><tr><td><strong>Thème</strong></td><td>Dompter la nature — espace et décor</td></tr>
+    <tr><td><strong>Projet court</strong></td><td>🗺️ Cartographie (échelle, orientation, légende)</td></tr>
+    <tr><td><strong>Grand projet</strong></td><td>📖 Chap.4-5 : le feu, la pêche, la cueillette</td></tr>
+    <tr><td><strong>Focus langue</strong></td><td>Verbes d'action précis, extensions du nom, sensations</td></tr></table>
+  </div></details>
+  <details><summary>📝 Mur de mots P3</summary><div class="body">
+    <div class="mur-grid">
+      <div class="mur-card"><h4>🔥 Feu</h4><ul><li>frotter, enflammer, étincelle, braise, brindille, combustible</li></ul></div>
+      <div class="mur-card"><h4>🍖 Nourriture</h4><ul><li>pêcher, chasser, cueillir, ration, coquillage, fruit sauvage</li></ul></div>
+      <div class="mur-card"><h4>🗺️ Espace</h4><ul><li>au nord, en contrebas, au sommet, s'éloigner, contourner</li></ul></div>
+      <div class="mur-card"><h4>🤲 Sensations</h4><ul><li>rugueux, brûlant, humide, tranchant, gluant, salé</li></ul></div>
+    </div>
+  </div></details>
+</section>
+
+<!-- ============================================================ -->
+<!-- PÉRIODE 4 -->
+<!-- ============================================================ -->
+<section id="p4">
+  <div class="section-title">⚡ P4 — Tempête &amp; Éloquence <a class="anchor" href="#p4">#</a></div>
+  <details><summary>📋 Fiche VAE + Planning</summary><div class="body">
+    <table><tr><td><strong>Thème</strong></td><td>Pic dramatique — solidarité face au danger</td></tr>
+    <tr><td><strong>Projet court</strong></td><td>🎯 Défi Éloquence (joutes verbales, posture, regard)</td></tr>
+    <tr><td><strong>Grand projet</strong></td><td>📖 Chap.6-7 : tempête, blessure, solidarité</td></tr>
+    <tr><td><strong>Focus langue</strong></td><td>Vocabulaire émotions, discours rapporté, rythme</td></tr></table>
+  </div></details>
+  <details><summary>📝 Mur de mots P4</summary><div class="body">
+    <div class="mur-grid">
+      <div class="mur-card"><h4>🌪️ Tempête</h4><ul><li>rafale, déluge, fracas, hurlement, éclair, tonnerre</li></ul></div>
+      <div class="mur-card"><h4>🆘 Danger</h4><ul><li>blessure, morsure, chute, sable mouvant, saignement</li></ul></div>
+      <div class="mur-card"><h4>🤝 Solidarité</h4><ul><li>s'unir, se rassurer, tenir bon, s'entraider, porter secours</li></ul></div>
+      <div class="mur-card"><h4>❤️ Émotions</h4><ul><li>courage, détermination, espoir, frayeur, soulagement, fierté</li></ul></div>
+    </div>
+  </div></details>
+</section>
+
+<!-- ============================================================ -->
+<!-- PÉRIODE 5 -->
+<!-- ============================================================ -->
+<section id="p5">
+  <div class="section-title">🏆 P5 — Théâtre, Livre &amp; Liaison Collège <a class="anchor" href="#p5">#</a></div>
+  <details><summary>📋 Fiche VAE + Planning</summary><div class="body">
+    <table><tr><td><strong>Thème</strong></td><td>Aboutissement : livre imprimé, scène, liaison collège</td></tr>
+    <tr><td><strong>Projet court</strong></td><td>🎭 Projet Théâtre (mise en scène d'un extrait)</td></tr>
+    <tr><td><strong>Grand projet</strong></td><td>📖 Épilogue + révision finale + impression du livre</td></tr>
+    <tr><td><strong>Valorisation</strong></td><td>Représentation parents + livre offert au CDI du collège</td></tr></table>
+  </div></details>
+  <details><summary>📋 Analyse de pratique — Bilan VAE</summary><div class="body">
+    <ul>
+      <li><strong>Bouclage du cycle :</strong> De la chuchoteuse (P1) à la scène (P5)</li>
+      <li><strong>Inclusion :</strong> L'élève à lenteur graphique valorisé à chaque étape</li>
+      <li><strong>Liaison collège :</strong> Les CM2 arrivent en 6ème avec un livre écrit par eux</li>
+      <li><strong>Construction curriculaire :</strong> Fluence → interprétation → éloquence → théâtre</li>
+    </ul>
+  </div></details>
+</section>
+
+<!-- ============================================================ -->
+<!-- OUTILS -->
+<!-- ============================================================ -->
+<section id="outils">
+  <div class="section-title">🛠️ Outils transversaux <a class="anchor" href="#outils">#</a></div>
+
+  <details>
+    <summary>📕 Manuel du Trappeur — Lexique complet</summary>
+    <div class="body">
+      <div class="mur-grid">
+        <div class="mur-card"><h4>🪵 Construire <span class="tag p1">P1</span></h4><ul><li>ramasser, tresser, empiler, planter, s'abriter, entasser, consolider, nouer</li></ul></div>
+        <div class="mur-card"><h4>😨 Peur <span class="tag p1">P1</span></h4><ul><li>pétrifié, panique, frisson, angoisse, menaçant, hostile</li></ul></div>
+        <div class="mur-card"><h4>👁️ Regarder <span class="tag p1">P1</span></h4><ul><li>scruter, fixer, apercevoir, constater, guetter <span class="tag p2">P2</span></li></ul></div>
+        <div class="mur-card"><h4>💧 Eau <span class="tag p2">P2</span></h4><ul><li>aride, source, cascade, saumâtre, nappe phréatique</li></ul></div>
+        <div class="mur-card"><h4>🔥 Feu <span class="tag p3">P3</span></h4><ul><li>frotter, enflammer, étincelle, braise, brindille, combustible</li></ul></div>
+        <div class="mur-card"><h4>🌪️ Tempête <span class="tag p4">P4</span></h4><ul><li>rafale, déluge, fracas, hurlement, éclair, tonnerre</li></ul></div>
+        <div class="mur-card"><h4>🤝 Solidarité <span class="tag p4">P4</span></h4><ul><li>s'unir, rassurer, tenir bon, s'entraider, porter secours, courage</li></ul></div>
+        <div class="mur-card"><h4>🆘 Signal <span class="tag p5">P5</span></h4><ul><li>fumée, SOS, signal, horizon, délivrance, hélicoptère, retrouvailles</li></ul></div>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>📊 Jauge de Survie</summary>
+    <div class="body">
+      <div class="grid3">
+        <div class="card"><h4>⚡ ÉNERGIE</h4><ul><li>🟥 Épuisé / 🟨 Fatigué / 🟩 En forme</li></ul></div>
+        <div class="card"><h4>❤️ MORAL</h4><ul><li>🟥 Démoralisé / 🟪 Hésitant / 🟦 Combatf</li></ul></div>
+        <div class="card"><h4>🎒 RESSOURCES</h4><ul><li>🟥 Rien / 🟨 Peu / 🟡 Suffisant</li></ul></div>
+      </div>
+      <div class="box yellow">💡 Afficher en A3 plastifié au tableau. Curseurs avec aimants ou pâte à fixer.</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🎤 Projet Chuchoteuses — Fiche fabrication</summary>
+    <div class="body">
+      <div class="grid3">
+        <div class="card"><h4>1. Présentation (15 min)</h4><ul><li>Montrer le modèle, expliquer le pourquoi</li></ul></div>
+        <div class="card"><h4>2. Fabrication (30 min)</h4><ul><li>1 tube PVC 8-10cm + 2 coudes + déco</li></ul></div>
+        <div class="card"><h4>3. Premier essai (15 min)</h4><ul><li>Texte court, tous chuchotent</li></ul></div>
+      </div>
+    </div>
+  </details>
+</section>
+
+<footer>
+  Projet CM2 "Les Naufragés de l'Îlot Perdu" — Jacques Hassani Moustoifa<br>
+  SEGPA M'Tsamboro, Mayotte • CAPPEI VAE • 2026<br>
+  <a href="#" onclick="expandAll()">📂 Tout déplier</a> • <a href="#" onclick="collapseAll()">📁 Tout replier</a> • <a href="#" onclick="window.print()">🖨️ Imprimer</a>
+</footer>
+
+</div><!-- /container -->
+
+<script>
+// ===== ESPACE ENSEIGNANT — GESTION DES ONGLETS =====
+document.querySelectorAll('.ee-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ee-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.ee-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    // Re-render dynamic content
+    if (tab.dataset.tab === 'cj') renderCJ();
+    if (tab.dataset.tab === 'edt') { initEdt(); renderEdt(); }
+    if (tab.dataset.tab === 'prog') renderProgression();
+    if (tab.dataset.tab === 'progrm') renderProgrammation();
+  });
+});
+
+// ===== CAHIER JOURNAL =====
+function saveCJ() {
+  const date = document.getElementById('cjDate').value;
+  const matiere = document.getElementById('cjMatiere').value;
+  const seance = document.getElementById('cjSeance').value.trim();
+  const content = document.getElementById('cjContent').value.trim();
+  if (!date || !content) return;
+  const entries = JSON.parse(localStorage.getItem('ee_cj') || '[]');
+  entries.unshift({ id: Date.now(), date, matiere, seance, content });
+  localStorage.setItem('ee_cj', JSON.stringify(entries));
+  document.getElementById('cjSaved').classList.add('show');
+  setTimeout(() => document.getElementById('cjSaved').classList.remove('show'), 2000);
+  document.getElementById('cjContent').value = '';
+  document.getElementById('cjSeance').value = '';
+  renderCJ();
+}
+
+function deleteCJ(id) {
+  let entries = JSON.parse(localStorage.getItem('ee_cj') || '[]');
+  entries = entries.filter(e => e.id !== id);
+  localStorage.setItem('ee_cj', JSON.stringify(entries));
+  renderCJ();
+}
+
+function renderCJ() {
+  const entries = JSON.parse(localStorage.getItem('ee_cj') || '[]');
+  const list = document.getElementById('cjList');
+  if (entries.length === 0) {
+    list.innerHTML = '<p style="color:#94a3b8;font-size:0.85em;">Aucune séance enregistrée pour le moment.</p>';
+    return;
+  }
+  list.innerHTML = entries.map(e => `
+    <div class="ee-entry">
+      <div class="content">
+        <strong>${e.date}</strong> • ${e.matiere}${e.seance ? ' — ' + e.seance : ''}<br>
+        <span class="meta">${e.content.substring(0, 150)}${e.content.length > 150 ? '…' : ''}</span>
+      </div>
+      <div class="actions">
+        <button class="ee-btn danger small" onclick="deleteCJ(${e.id})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== EMPLOI DU TEMPS =====
+let edtMode = 'matin';
+
+const EDTTEMPLATES = {
+  matin: {
+    title: '🔆 Bloc Matin (07h-12h lun-jeu / 07h-11h ven)',
+    slots: [
+      { time: '07h-07h10', label: 'Accueil / Rituel' },
+      { time: '07h10-07h20', label: 'Fluence (chuchoteuse)' },
+      { time: '07h20-08h00', label: 'Français 1' },
+      { time: '08h00-08h45', label: 'Mathématiques' },
+      { time: '08h45-09h00', label: 'Récréation' },
+      { time: '09h00-09h40', label: 'Projet livre / Lecture' },
+      { time: '09h40-10h20', label: 'Français 2 / Grammaire' },
+      { time: '10h20-10h30', label: 'Pause' },
+      { time: '10h30-11h15', label: 'Sciences / Histoire-Géo' },
+      { time: '11h15-12h00', label: 'Projet période / Arts' },
+      { time: 'Ven 07h-08h', label: 'Évaluations / Bilan' },
+      { time: 'Ven 08h-09h', label: 'Lecture offerte / Bibliothèque' },
+      { time: 'Ven 09h-10h', label: 'Projet livre (créneau long)' },
+      { time: 'Ven 10h-11h', label: 'Bilan de semaine / Conseils' },
+    ]
+  },
+  aprem: {
+    title: '🌙 Bloc Après-midi (13h-17h lun-jeu / 13h-16h ven)',
+    slots: [
+      { time: '13h-13h10', label: 'Accueil / Retour calme' },
+      { time: '13h10-13h20', label: 'Fluence (chuchoteuse)' },
+      { time: '13h20-14h00', label: 'Mathématiques' },
+      { time: '14h00-14h40', label: 'Français' },
+      { time: '14h40-14h55', label: 'Récréation' },
+      { time: '14h55-15h35', label: 'Projet livre / Écriture' },
+      { time: '15h35-16h15', label: 'Projet période / Arts/Musique' },
+      { time: '16h15-17h00', label: 'Sciences / EMC / Jeux' },
+      { time: 'Ven 13h-14h', label: 'Français / Lecture' },
+      { time: 'Ven 14h-15h', label: 'Projet période (créneau long)' },
+      { time: 'Ven 15h-16h', label: 'Bilan / Conseil de classe' },
+    ]
+  }
+};
+
+function showEdt(mode) {
+  edtMode = mode;
+  document.querySelectorAll('#edtContainer .edt-mode-btn').forEach(b => b.style.background = '#f1f5f9');
+  event.target.style.background = '#0f172a';
+  event.target.style.color = 'white';
+  renderEdt();
+}
+
+function initEdt() {
+  if (!localStorage.getItem('ee_edt_matin')) {
+    localStorage.setItem('ee_edt_matin', JSON.stringify(EDTTEMPLATES.matin.slots.map(s => ({ time: s.time, label: s.label }))));
+    localStorage.setItem('ee_edt_aprem', JSON.stringify(EDTTEMPLATES.aprem.slots.map(s => ({ time: s.time, label: s.label }))));
+  }
+}
+
+function renderEdt() {
+  const data = JSON.parse(localStorage.getItem('ee_edt_' + edtMode) || '[]');
+  const template = EDTTEMPLATES[edtMode];
+  let html = `<div style="font-weight:700;margin-bottom:6px;">${template.title}</div>`;
+  data.forEach((slot, i) => {
+    html += `<div style="display:flex;gap:6px;margin:3px 0;align-items:center;">
+      <span style="min-width:110px;font-size:0.78em;font-weight:600;color:#475569;">${slot.time}</span>
+      <input class="ee-input" style="flex:1;" value="${slot.label}" data-idx="${i}" onchange="updateEdtSlot(${i}, this.value)">
+    </div>`;
+  });
+  document.getElementById('edtContainer').innerHTML = html;
+}
+
+function updateEdtSlot(idx, val) {
+  const data = JSON.parse(localStorage.getItem('ee_edt_' + edtMode) || '[]');
+  if (data[idx]) data[idx].label = val;
+  localStorage.setItem('ee_edt_' + edtMode, JSON.stringify(data));
+}
+
+function saveEdt() {
+  document.getElementById('edtSaved').classList.add('show');
+  setTimeout(() => document.getElementById('edtSaved').classList.remove('show'), 2000);
+}
+
+// ===== PROGRESSION =====
+const PROG_DEFAULTS = {
+  matieres: ['Français', 'Mathématiques', 'Lecture', 'Projet livre', 'Fluence'],
+  periods: ['P1', 'P2', 'P3', 'P4', 'P5'],
+  data: {
+    'Français': { P1: 'Grammaire : phrase, nom/verbe. Conjugaison : présent', P2: 'Passé simple / imparfait. Connecteurs', P3: 'Extensions du nom. Adjectifs', P4: 'Discours rapporté. Variété des phrases', P5: 'Révision générale' },
+    'Mathématiques': { P1: 'Nombres : numération entiers', P2: 'Opérations : addition/soustraction', P3: 'Géométrie : repérage, échelle', P4: 'Grandeurs et mesures', P5: 'Problèmes complexes' },
+    'Lecture': { P1: 'Fluence : décodage, vitesse', P2: 'Compréhension implicite/explicite', P3: 'Lecture documentaire (cartes)', P4: 'Lecture expressive', P5: 'Mise en voix théâtrale' },
+    'Projet livre': { P1: 'Héros + Chap.1', P2: 'Chap.2-3 (eau)', P3: 'Chap.4-5 (feu)', P4: 'Chap.6-7 (tempête)', P5: 'Épilogue + impression' },
+    'Fluence': { P1: 'Chuchoteuse, score MCLM', P2: 'Défi Lecture, expressivité', P3: 'Lecture de cartes', P4: 'Lecture argumentée', P5: 'Performance théâtrale' },
+  }
+};
+
+function renderProgression() {
+  let data = JSON.parse(localStorage.getItem('ee_prog') || 'null');
+  if (!data) { data = PROG_DEFAULTS; localStorage.setItem('ee_prog', JSON.stringify(data)); }
+  let html = '<table><tr><th style="width:120px;">Matière</th>';
+  data.periods.forEach(p => { html += `<th>${p}</th>`; });
+  html += '</tr>';
+  data.matieres.forEach(m => {
+    html += `<tr><td style="font-weight:600;">${m}</td>`;
+    data.periods.forEach(p => {
+      const val = (data.data[m] && data.data[m][p]) || '';
+      html += `<td><input class="ee-input" style="font-size:0.78em;padding:4px 6px;" value="${val}" data-matiere="${m}" data-period="${p}" onchange="updateProg(this)"></td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</table>';
+  document.getElementById('progContainer').innerHTML = html;
+}
+
+function updateProg(el) {
+  const data = JSON.parse(localStorage.getItem('ee_prog'));
+  const m = el.dataset.matiere;
+  const p = el.dataset.period;
+  if (!data.data[m]) data.data[m] = {};
+  data.data[m][p] = el.value;
+  localStorage.setItem('ee_prog', JSON.stringify(data));
+}
+
+function saveProgression() {
+  document.getElementById('progSaved').classList.add('show');
+  setTimeout(() => document.getElementById('progSaved').classList.remove('show'), 2000);
+}
+
+// ===== PROGRAMMATION =====
+const PROGRM_DEFAULTS = [
+  { periode: 'P1', dates: 'Sept-Oct', projet_court: '🎤 Chuchoteuses', grand_projet: 'Héros + Chap.1', parole: '🔧 Technique', blocs: 3 },
+  { periode: 'P2', dates: 'Nov-Déc', projet_court: '🏆 Défi Lecture', grand_projet: 'Chap.2-3 (eau)', parole: '🎭 Interprétation', blocs: 3 },
+  { periode: 'P3', dates: 'Jan-Fév', projet_court: '🗺️ Cartographie', grand_projet: 'Chap.4-5 (feu)', parole: '🌍 Spatialisation', blocs: 4 },
+  { periode: 'P4', dates: 'Mars-Avr', projet_court: '🎯 Éloquence', grand_projet: 'Chap.6-7 (tempête)', parole: '🎤 Conviction', blocs: 3 },
+  { periode: 'P5', dates: 'Mai-Juin', projet_court: '🎭 Théâtre', grand_projet: 'Épilogue + Livre', parole: '🏆 Performance', blocs: 3 },
+];
+
+function renderProgrammation() {
+  let data = JSON.parse(localStorage.getItem('ee_progrm') || 'null');
+  if (!data) { data = PROGRM_DEFAULTS; localStorage.setItem('ee_progrm', JSON.stringify(data)); }
+  
+  // Barre de progression
+  const totalBlocs = data.reduce((s, p) => s + p.blocs, 0);
+  const barColors = ['#ef4444','#3b82f6','#8b5cf6','#f59e0b','#22c55e'];
+  
+  let html = `<div class="prog-bar">`;
+  data.forEach((p, i) => {
+    const pct = Math.round(p.blocs / totalBlocs * 100);
+    html += `<div class="p${i+1}" style="width:${pct}%;">${p.periode}</div>`;
+  });
+  html += `</div>`;
+  
+  html += '<table><tr><th>Période</th><th>Dates</th><th>Projet court</th><th>Grand projet</th><th>Parole</th><th>Blocs</th></tr>';
+  data.forEach((p, i) => {
+    html += `<tr>
+      <td><input class="ee-input" style="width:50px;" value="${p.periode}" data-idx="${i}" data-field="periode" onchange="updateProgrm(${i}, 'periode', this.value)"></td>
+      <td><input class="ee-input" style="width:90px;" value="${p.dates}" data-idx="${i}" data-field="dates" onchange="updateProgrm(${i}, 'dates', this.value)"></td>
+      <td><input class="ee-input" value="${p.projet_court}" data-idx="${i}" data-field="projet_court" onchange="updateProgrm(${i}, 'projet_court', this.value)"></td>
+      <td><input class="ee-input" value="${p.grand_projet}" data-idx="${i}" data-field="grand_projet" onchange="updateProgrm(${i}, 'grand_projet', this.value)"></td>
+      <td><input class="ee-input" style="width:110px;" value="${p.parole}" data-idx="${i}" data-field="parole" onchange="updateProgrm(${i}, 'parole', this.value)"></td>
+      <td><input class="ee-input" style="width:50px;" type="number" value="${p.blocs}" data-idx="${i}" data-field="blocs" onchange="updateProgrm(${i}, 'blocs', parseInt(this.value)||0)"></td>
+    </tr>`;
+  });
+  html += '</table>';
+  document.getElementById('progrmContainer').innerHTML = html;
+}
+
+function updateProgrm(idx, field, val) {
+  const data = JSON.parse(localStorage.getItem('ee_progrm'));
+  data[idx][field] = val;
+  localStorage.setItem('ee_progrm', JSON.stringify(data));
+}
+
+function saveProgrammation() {
+  document.getElementById('progrmSaved').classList.add('show');
+  setTimeout(() => document.getElementById('progrmSaved').classList.remove('show'), 2000);
+}
+
+// ===== NOTES =====
+function saveNotes() {
+  const content = document.getElementById('notesContent').value;
+  localStorage.setItem('ee_notes', content);
+  document.getElementById('notesSaved').classList.add('show');
+  setTimeout(() => document.getElementById('notesSaved').classList.remove('show'), 2000);
+}
+
+// Initialiser la date du cahier journal
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('cjDate').value = today;
+  renderCJ();
+  const notes = localStorage.getItem('ee_notes');
+  if (notes) document.getElementById('notesContent').value = notes;
+  renderProgression();
+  renderProgrammation();
+});
+
+// ===== NAVIGATION ACTIVE =====
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a:not([href^="#"])');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-70px 0px 0px 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
