@@ -530,7 +530,7 @@ p2:{t:'💧 P2',c:'#3b82f6',s:[
 // Tabs
 (function(){const c=document.getElementById('ft');if(!c)return;let tabs='<div class="tabs">';
 ['p1','p2'].forEach((k,i)=>{tabs+=`<div class="tab${i===0?' on':''}" data-ft="${k}" onclick="rF('${k}')">${FS[k].t}</div>`;});
-tabs+=`<div class="tab" data-ft="gen" onclick="rF('gen')">🤖 Générateur IA</div></div><div id="fp"></div>`;
+tabs+=`<div class="tab" data-ft="gen" onclick="rF('gen')">🤖 Générateur</div><div class="tab" data-ft="cls" onclick="rF('cls')">📁 Classeur</div></div><div id="fp"></div>`;
 c.innerHTML=tabs;rF('p1');})();
 function rF(k){
 const c=document.getElementById('fp');if(!c)return;
@@ -557,6 +557,38 @@ if(k==='gen'){
   </div>
   <div id="gRes" style="margin-top:8px"></div>`;
   upGO();
+  return;
+}
+if(k==='cls'){
+  const fiches=JSON.parse(localStorage.getItem('clsFiches')||'[]');
+  c.innerHTML=`<div class="box b">📁 <strong>Classeur de fiches</strong> — ${fiches.length} fiche(s) enregistrée(s). Les fiches générées sont automatiquement sauvegardées.</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0"><button class="btn sm" style="background:#0f172a;color:#fff" onclick="exportCSV()">📤 Tout exporter</button>
+  <button class="btn sm" style="background:#fee2e2;color:#dc2626" onclick="if(confirm('Supprimer toutes les fiches ?')){localStorage.removeItem('clsFiches');rF('cls');}">🗑️ Tout effacer</button></div>
+  <div id="clsList"></div>`;
+  const l=document.getElementById('clsList');
+  if(!l)return;
+  if(fiches.length===0){l.innerHTML='<p style="color:#94a3b8;font-size:.85em">Aucune fiche enregistrée. Génère une fiche dans 🤖 Générateur pour l\'ajouter ici.</p>';return;}
+  // Group by subject
+  const grp={};
+  fiches.forEach(f=>{const s=f.domaine||'Autre';if(!grp[s])grp[s]=[];grp[s].push(f);});
+  let h='';
+  Object.keys(grp).sort().forEach(s=>{
+    h+=`<details style="margin:4px 0" open><summary style="font-weight:700">📂 ${s} (${grp[s].length})</summary><div class="body">`;
+    grp[s].sort((a,b)=>b.date-a.date).forEach((f,i)=>{
+      const d=new Date(f.date).toLocaleDateString('fr-FR');
+      h+=`<div class="ent">
+        <div class="content"><strong>${f.titre||'Sans titre'}</strong> • ${d} • ${f.periode||''} • S${f.seance||'?'}
+        <br><span class="m">${f.contenu?f.contenu.substring(0,80)+'…':''}</span></div>
+        <div style="display:flex;gap:3px;flex-shrink:0">
+          <button class="btn sm" style="background:#f1f5f9" onclick="viewFiche(${i})">👁️</button>
+          <button class="btn sm" style="background:#f1f5f9" onclick="dlFiche(${i})">⬇️</button>
+          <button class="btn sm" style="background:#fee2e2;color:#dc2626" onclick="delFiche(${i})">✕</button>
+        </div>
+      </div>`;
+    });
+    h+=`</div></details>`;
+  });
+  l.innerHTML=h;
   return;
 }
 const d=FS[k];if(!d)return;
@@ -623,7 +655,69 @@ if(!r.ok){const e=await r.text();throw new Error(e.includes('401')?'Clé API inv
 const d=await r.json();const txt=d.choices[0].message.content;
 res.innerHTML='<div class="box g">✅ Fiche générée</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;white-space:pre-wrap;font-size:.85em;max-height:500px;overflow-y:auto">'+txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div>';
 st.textContent='✅ Terminé';
+// Sauvegarder dans le classeur
+window.saveFiche(titre,periode,domaine,num,txt);
 }catch(e){st.textContent='❌ '+e.message;res.innerHTML='<div class="box r">❌ '+e.message+'<br>Vérifie ta clé dans <a href="#reg" style="color:#3b82f6">⚙️ Réglages</a>.</div>';}
+};
+// Classeur : sauvegarde auto après génération
+window.saveFiche=function(titre,periode,domaine,seance,contenu){
+if(!titre||!contenu)return;
+const fiches=JSON.parse(localStorage.getItem('clsFiches')||'[]');
+fiches.unshift({id:Date.now(),date:Date.now(),titre,periode,domaine,seance,contenu});
+localStorage.setItem('clsFiches',JSON.stringify(fiches));
+};
+// Vue détail (aperçu dans la page)
+window.viewFiche=function(idx){
+const fiches=JSON.parse(localStorage.getItem('clsFiches')||'[]');
+const f=fiches[idx];if(!f)return;
+const d=new Date(f.date).toLocaleDateString('fr-FR');
+const cont=f.contenu.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+const overlay=document.createElement('div');
+overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px';
+overlay.onclick=function(e){if(e.target===overlay)overlay.remove();};
+overlay.innerHTML='<div style="background:#fff;border-radius:12px;max-width:700px;width:100%;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.2)">'+
+  '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">'+
+  '<div><h3 style="font-size:1.1em">'+f.titre+'</h3><p style="color:#64748b;font-size:.8em">'+f.domaine+' • '+f.periode+' • Séance '+f.seance+' • '+d+'</p></div>'+
+  '<span style="font-size:1.5em;cursor:pointer;padding:0 6px;line-height:1" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span></div>'+
+  '<div style="white-space:pre-wrap;font-size:.9em;line-height:1.6">'+cont+'</div></div>';
+document.body.appendChild(overlay);
+};
+// Téléchargement
+window.dlFiche=function(idx){
+const fiches=JSON.parse(localStorage.getItem('clsFiches')||'[]');
+const f=fiches[idx];if(!f)return;
+const blob=new Blob(['# '+f.titre+'\nDate: '+(new Date(f.date).toLocaleDateString('fr-FR'))+'\nDomaine: '+f.domaine+'\nPériode: '+f.periode+'\nSéance: '+f.seance+'\n\n'+f.contenu],{type:'text/plain'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+a.download='fiche_'+f.titre.substring(0,30).replace(/[^a-zA-Z0-9]/g,'_')+'.txt';
+a.click();URL.revokeObjectURL(a.href);
+};
+// Suppression
+window.delFiche=function(idx){
+let fiches=JSON.parse(localStorage.getItem('clsFiches')||'[]');
+fiches.splice(idx,1);localStorage.setItem('clsFiches',JSON.stringify(fiches));
+rF('cls');
+};
+// Export tout en CSV
+window.exportCSV=function(){
+const fiches=JSON.parse(localStorage.getItem('clsFiches')||'[]');
+if(!fiches.length)return;
+let csv='Titre,Domaine,Période,Séance,Date\n';
+fiches.forEach(f=>{csv+=`"${f.titre}","${f.domaine}","${f.periode}","${f.seance}","${new Date(f.date).toLocaleDateString('fr-FR')}"\n`;});
+const blob=new Blob([csv],{type:'text/csv'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+a.download='fiches_'+new Date().toISOString().split('T')[0]+'.csv';
+a.click();URL.revokeObjectURL(a.href);
+};
+// Export tout en ZIP texte
+window.exportAll=function(){
+const fiches=JSON.parse(localStorage.getItem('clsFiches')||'[]');
+if(!fiches.length)return;
+let all='';
+fiches.forEach(f=>{all+='===== '+f.titre+' =====\nDate: '+new Date(f.date).toLocaleDateString('fr-FR')+'\nDomaine: '+f.domaine+'\nPériode: '+f.periode+'\nSéance: '+f.seance+'\n\n'+f.contenu+'\n\n';});
+const blob=new Blob([all],{type:'text/plain'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+a.download='toutes_fiches_'+new Date().toISOString().split('T')[0]+'.txt';
+a.click();URL.revokeObjectURL(a.href);
 };
 </script>
 </section>
