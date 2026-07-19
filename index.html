@@ -598,14 +598,15 @@ obj.forEach(o=>{s.innerHTML+=`<option value="${o}">${o}</option>`;});
 s.innerHTML+='<option value="__custom__">✏️ Personnalisé…</option>';
 };
 window.genFiche=async function(){
-const key=localStorage.getItem('gk');if(!key){alert('Configure la clé API dans ⚙️ Réglages');return;}
-const st=document.getElementById('gSt');const res=document.getElementById('gRes');
-const peri=document.getElementById('gP').value,niv=document.getElementById('gN').value;
-const dom=document.getElementById('gD').value,titre=document.getElementById('gT').value.trim();
-const duree=document.getElementById('gDu').value,num=document.getElementById('gNum').value;
-const obj=document.getElementById('gO').value;const extra=document.getElementById('gX').value.trim();
+const key=localStorage.getItem('gk');if(!key){alert('❌ Clé API manquante. Configure-la dans ⚙️ Réglages.');return;}
+const st=document.getElementById('gSt');const res=document.getElementById('gRes');if(!st||!res)return;
+const peri=document.getElementById('gP')?.value||'P1',niv=document.getElementById('gN')?.value||'CM1/CM2';
+const dom=document.getElementById('gD')?.value||'Français',titre=document.getElementById('gT')?.value.trim()||'';
+const duree=document.getElementById('gDu')?.value||'1h',num=document.getElementById('gNum')?.value||'1';
+const objEl=document.getElementById('gO');const obj=objEl?.value||'';
+const extra=document.getElementById('gX')?.value.trim()||'';
 if(!titre){st.textContent='❌ Remplis le titre';return;}
-st.textContent='⏳ Génération en cours…';res.innerHTML='';
+st.textContent='⏳ Génération (20-30s)...';res.innerHTML='';
 try{
 const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
 method:'POST',
@@ -614,21 +615,15 @@ body:JSON.stringify({
 model:'llama-3.3-70b-versatile',
 messages:[
 {role:'system',content:'Tu es un enseignant expert en pédagogie explicite (CP-CM2).'},
-{role:'user',content:`Génère une fiche de préparation complète pour :
-NIVEAU: ${niv}, PÉRIODE: ${peri}, SÉANCE N°${num}
-TITRE: ${titre}, DOMAINE: ${dom}, DURÉE: ${duree}
-OBJECTIF: ${obj}${extra?'\nCONTEXTE: '+extra:''}
-
-Structure obligatoire en 5 phases: Rappel flash (5min) → Modelage (10-15min) → Pratique guidée (10-15min) → Pratique autonome différenciée (15-20min) → Bilan (5min).
-Inclure: différenciation 3 niveaux (N1 Guidé/N2 Standard/N3 Défi), adaptation pour élève à lenteur graphique, matériel nécessaire.`}
+{role:'user',content:"Génère une fiche de préparation complète pour:\nNIVEAU: "+niv+", PÉRIODE: "+peri+", SÉANCE N°"+num+"\nTITRE: "+titre+", DOMAINE: "+dom+", DURÉE: "+duree+"\nOBJECTIF: "+(obj||titre)+(extra?"\nCONTEXTE: "+extra:"")+"\n\nStructure: Rappel flash (5min) → Modelage (10-15min) → Pratique guidée (10-15min) → Pratique autonome différenciée (15-20min) → Bilan (5min).\nInclure: différenciation 3 niveaux (N1/N2/N3), adaptation lenteur graphique, matériel."}
 ],
 temperature:0.7,max_tokens:2048
 })});
-if(!r.ok){const e=await r.text();throw new Error(e.includes('401')?'Clé invalide':'Erreur '+r.status);}
+if(!r.ok){const e=await r.text();throw new Error(e.includes('401')?'Clé API invalide':e.includes('429')?'Trop de requêtes':'Erreur '+r.status);}
 const d=await r.json();const txt=d.choices[0].message.content;
-res.innerHTML=`<div class="box g">✅ Fiche générée</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;white-space:pre-wrap;font-size:.85em;max-height:500px;overflow-y:auto">${txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;
+res.innerHTML='<div class="box g">✅ Fiche générée</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;white-space:pre-wrap;font-size:.85em;max-height:500px;overflow-y:auto">'+txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div>';
 st.textContent='✅ Terminé';
-}catch(e){st.textContent='❌ '+e.message;res.innerHTML=`<div class="box r">❌ ${e.message}</div>`;}
+}catch(e){st.textContent='❌ '+e.message;res.innerHTML='<div class="box r">❌ '+e.message+'<br>Vérifie ta clé dans <a href="#reg" style="color:#3b82f6">⚙️ Réglages</a>.</div>';}
 };
 </script>
 </section>
