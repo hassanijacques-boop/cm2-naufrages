@@ -483,7 +483,192 @@ const PROG = [
 
 </div><!-- /container -->
 
-<!-- ======================== BAS DE PAGE (JS) ======================== -->
+<!-- ======================== BO ======================== -->
+<section id="bo" style="max-width:1020px;margin:0 auto 14px;padding:18px 20px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;scroll-margin-top:66px">
+<div class="st">📜 Bulletin Officiel — Programmes Cycle 3 <span class="badge o">Référentiel</span></div>
+<details><summary>📘 Socle commun (5 domaines)</summary><div class="body">
+<table><tr><th>Domaine</th><th>Intitulé</th></tr>
+<tr><td><strong>1</strong></td><td>Les langages pour penser et communiquer</td></tr>
+<tr><td><strong>2</strong></td><td>Les méthodes et outils pour apprendre</td></tr>
+<tr><td><strong>3</strong></td><td>La formation de la personne et du citoyen</td></tr>
+<tr><td><strong>4</strong></td><td>Les systèmes naturels et techniques</td></tr>
+<tr><td><strong>5</strong></td><td>Les représentations du monde et l'activité humaine</td></tr>
+</table></div></details>
+<details><summary>📖 Attendus Français CM1/CM2</summary><div class="body"><table>
+<tr><th>Compétence</th><th>CM1</th><th>CM2</th></tr>
+<tr><td>Fluence</td><td>90 mots/min</td><td>110 mots/min</td></tr>
+<tr><td>Rédaction</td><td>10 lignes</td><td>15-20 lignes</td></tr>
+<tr><td>Grammaire</td><td>Phrase, nature</td><td>Fonctions, compléments</td></tr>
+<tr><td>Conjugaison</td><td>Présent, futur, imparfait</td><td>Passé simple, conditionnel</td></tr>
+</table></div></details>
+<details><summary>➕ Attendus Maths CM1/CM2</summary><div class="body"><table>
+<tr><th>Compétence</th><th>CM1</th><th>CM2</th></tr>
+<tr><td>Nombres</td><td>Jusqu'au million</td><td>Jusqu'au milliard, fractions</td></tr>
+<tr><td>Calcul</td><td>+ - × posés</td><td>Division, décimaux</td></tr>
+<tr><td>Géométrie</td><td>Figures, symétrie</td><td>Solides, repérage</td></tr>
+<tr><td>Grandeurs</td><td>Longueurs, masses</td><td>Aires, volumes, proportionnalité</td></tr>
+</table></div></details>
+</section>
+
+<!-- ======================== FICHES DE PRÉPARATION ======================== -->
+<section id="fiches" class="container" style="padding:0">
+<div class="st">📋 Fiches de préparation <span class="badge b">Pré-remplies</span><span class="badge o">Générateur IA</span></div>
+<div id="ft"></div>
+<script>
+const FS = {
+p1:{t:'🎤 P1',c:'#ef4444',s:[
+{n:1,ti:'Lancement théâtral',du:'1h',do:'Français/Projet',ob:'Plonger dans l\'univers du projet',co:['Comprendre un récit','S\'exprimer à l\'oral','Coopérer'],ph:[{p:'Rappel',t:'5min',m:'Collectif',d:'Jauge de Survie'},{p:'Modelage',t:'15min',m:'Collectif',d:'Lecture théâtrale du prologue'},{p:'Pratique guidée',t:'10min',m:'Collectif',d:'Échanges libres'},{p:'Pratique autonome',t:'25min',m:'Collectif',d:'Création 3 héros'},{p:'Bilan',t:'5min',m:'Collectif',d:'Annonce suite'}],df:'Oral uniquement',ad:'Fiche pré-remplie',mat:'Jauge, tableau, fiches héros'},
+{n:2,ti:'Modelage & Mur de mots',du:'1h',do:'Français/Lexique',ob:'Enrichir le lexique',co:['Vocabulaire précis','Structurer un récit'],ph:[{p:'Rappel',t:'5min',m:'Collectif',d:'Rappel héros'},{p:'Modelage',t:'15min',m:'Collectif',d:'Récit d\'aventure : héros+quête+obstacles'},{p:'Pratique guidée',t:'15min',m:'Collectif',d:'Mur de mots P1'},{p:'Pratique autonome',t:'20min',m:'Individuel',d:'3 phrases avec mots du Mur'},{p:'Bilan',t:'5min',m:'Collectif',d:'Lecture productions'}],df:'N1 mots imposés, N2 3 mots, N3 phrase complexe',ad:'Fiche Mur de mots imprimée',mat:'Affiche Mur, fiches 3 niveaux'},
+{n:3,ti:'Projet Chuchoteuses',du:'1h15',do:'Français/Arts/EMC',ob:'Fabriquer l\'outil de fluence',co:['Lire avec fluidité','Respecter le matériel'],ph:[{p:'Modelage',t:'10min',m:'Collectif',d:'Pourquoi une chuchoteuse ?'},{p:'Pratique auto. 1',t:'35min',m:'Individuel',d:'Assemblage tube + coudes'},{p:'Pratique auto. 2',t:'15min',m:'Individuel',d:'Personnalisation déco'},{p:'Application',t:'15min',m:'Individuel',d:'Premier essai texte court'}],df:'Assistance emboîtement',ad:'Tube pré-découpé',mat:'Tubes PVC, coudes, chatterton, autocollants'},
+{n:4,ti:'Pratique guidée Prologue',du:'1h',do:'Français/Production',ob:'Écrire le prologue et amorcer Chap.1',co:['Rédiger sous dictée','Coopérer en groupe'],ph:[{p:'Rappel',t:'5min',m:'Collectif',d:'Relecture prologue'},{p:'Pratique guidée',t:'15min',m:'Collectif',d:'Dictée à l\'adulte'},{p:'Organisation',t:'10min',m:'Collectif',d:'5 groupes, rôles'},{p:'Pratique auto.',t:'25min',m:'Groupes',d:'Début Chap.1 : la panique'},{p:'Bilan',t:'5min',m:'Collectif',d:'Où en êtes-vous ?'}],df:'N1 phrases amorcées',ad:'Dicte ses idées',mat:'Prologue tableau, fiches consignes'},
+{n:5,ti:'Fluence + Chap.1',du:'1h',do:'Français',ob:'Installer rituel fluence + écrire',co:['Lire avec fluidité','Rédiger en groupe'],ph:[{p:'Fluence',t:'10min',m:'Individuel',d:'Lecture chuchoteuse 1min'},{p:'Consignes',t:'5min',m:'Collectif',d:'N1/N2/N3 affichées'},{p:'Écriture',t:'35min',m:'Groupes',d:'Chap.1 : l\'enseignant circule'},{p:'Bilan',t:'10min',m:'Collectif',d:'Lecture d\'un extrait'}],df:'Voir consignes',ad:'Gardien des mots',mat:'Texte fluence, consignes différenciées'}
+]},
+p2:{t:'💧 P2',c:'#3b82f6',s:[
+{n:1,ti:'Défi Lecture lancement',du:'1h',do:'Français/Lecture',ob:'Lancer le challenge MCLM',co:['Lire avec fluidité','Mesurer sa progression'],ph:[{p:'Fluence',t:'10min',m:'Individuel',d:'Chuchoteuse'},{p:'Modelage',t:'15min',m:'Collectif',d:'Présentation Défi, tableau suivi'},{p:'Test',t:'15min',m:'Individuel',d:'Test 1min chronométré'},{p:'Bilan',t:'15min',m:'Individuel',d:'Notation score initial'}],df:'Texte adapté N1',ad:'Score noté par pair',mat:'Texte, chronomètre, fiches suivi'}
+]}
+};
+// Tabs
+(function(){const c=document.getElementById('ft');if(!c)return;let tabs='<div class="tabs">';
+['p1','p2'].forEach((k,i)=>{tabs+=`<div class="tab${i===0?' on':''}" data-ft="${k}" onclick="rF('${k}')">${FS[k].t}</div>`;});
+tabs+=`<div class="tab" data-ft="gen" onclick="rF('gen')">🤖 Générateur IA</div></div><div id="fp"></div>`;
+c.innerHTML=tabs;rF('p1');})();
+function rF(k){
+const c=document.getElementById('fp');if(!c)return;
+document.querySelectorAll('#ft .tab').forEach(t=>t.classList.remove('on'));
+document.querySelector(`#ft .tab[data-ft="${k}"]`)?.classList.add('on');
+if(k==='gen'){c.innerHTML='<div class="box y">🤖 Générateur IA — configure ta clé API dans <a href="#reg">⚙️ Réglages</a></div>';return;}
+const d=FS[k];if(!d)return;
+let h='';d.s.forEach(s=>{
+h+=`<details style="margin:4px 0"><summary>S${s.n} — ${s.ti} <span style="color:#64748b;font-weight:400;font-size:.8em">${s.du} • ${s.do}</span></summary><div class="body">
+<div style="margin-bottom:6px"><strong>🎯 Objectif :</strong> ${s.ob}</div>
+<div style="margin-bottom:6px"><strong>📚 Compétences :</strong><br>${s.co.map(c=>'• '+c).join('<br>')}</div>
+<table style="font-size:.82em"><tr><th style="width:100px">Phase</th><th style="width:45px">Durée</th><th style="width:70px">Modalité</th><th>Déroulement</th></tr>
+${s.ph.map(p=>`<tr><td><strong>${p.p}</strong></td><td>${p.t}</td><td>${p.m}</td><td>${p.d}</td></tr>`).join('')}</table>
+<div class="box y" style="margin-top:6px"><strong>🔴🟡🟢 Diff :</strong> ${s.df}</div>
+<div class="box r"><strong>♿ Adapt :</strong> ${s.ad}</div>
+<div class="box b"><strong>🧰 Matériel :</strong> ${s.mat}</div>
+</div></details>`;
+});
+c.innerHTML=h;
+const f=c.querySelector('details');if(f)f.open=true;
+}
+</script>
+</section>
+
+<!-- ======================== ESPACE ENSEIGNANT ======================== -->
+<section id="ens" class="container" style="padding:0">
+<div class="st">👨‍🏫 Mon espace enseignant <span class="badge b">Sauvegarde auto</span></div>
+<div class="tabs" id="etabs">
+<div class="tab on" data-et="cj" onclick="rE('cj')">📋 Cahier journal</div>
+<div class="tab" data-et="edt" onclick="rE('edt')">📅 EDT</div>
+<div class="tab" data-et="prog" onclick="rE('prog')">📈 Progression</div>
+<div class="tab" data-et="notes" onclick="rE('notes')">📌 Notes</div>
+</div>
+<div id="ep"></div>
+<script>
+function rE(k){
+document.querySelectorAll('#etabs .tab').forEach(t=>t.classList.remove('on'));
+document.querySelector(`#etabs .tab[data-et="${k}"]`)?.classList.add('on');
+const c=document.getElementById('ep');if(!c)return;
+if(k==='cj') renderCJ(c);
+else if(k==='edt') renderEDT(c);
+else if(k==='prog') renderProg(c);
+else if(k==='notes') renderNotes(c);
+}
+// Cahier journal
+function renderCJ(c){
+let h='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">';
+h+=`<input type="date" id="cjD" class="in" style="width:auto;flex:0 0 150px">`;
+h+=`<select id="cjM" class="in" style="width:auto;flex:0 0 120px">`;
+['Français','Maths','Projet livre','Projet période','Fluence','Lecture','Sciences','Histoire-Géo','Arts','EPS','Autre'].forEach(m=>h+=`<option>${m}</option>`);
+h+=`</select>`;
+h+=`<input id="cjT" class="in" style="width:auto;flex:1;min-width:100px" placeholder="Titre..."></div>`;
+h+=`<textarea id="cjX" class="in" style="min-height:80px" placeholder="Déroulement, observations..."></textarea>`;
+h+=`<div style="margin:6px 0;display:flex;gap:6px;align-items:center"><button class="btn pri" onclick="sCJ()">💾 Enregistrer</button><span id="cjS" style="font-size:.75em;color:#16a34a"></span></div>`;
+h+=`<h4 style="font-size:.85em;margin:10px 0 4px">📋 Séances enregistrées</h4><div id="cjL"></div>`;
+c.innerHTML=h;
+document.getElementById('cjD').value=new Date().toISOString().split('T')[0];
+renderCJList();
+}
+function sCJ(){
+const d=document.getElementById('cjD').value,m=document.getElementById('cjM').value,t=document.getElementById('cjT').value.trim(),x=document.getElementById('cjX').value.trim();
+if(!d||!x){alert('Remplis la date et le contenu');return;}
+const es=JSON.parse(localStorage.getItem('cj')||'[]');es.unshift({id:Date.now(),d,m,t,x});localStorage.setItem('cj',JSON.stringify(es));
+document.getElementById('cjX').value='';document.getElementById('cjT').value='';renderCJList();
+const s=document.getElementById('cjS');if(s){s.textContent='✅ Enregistré';setTimeout(()=>s.textContent='',2000);}
+}
+function renderCJList(){
+const es=JSON.parse(localStorage.getItem('cj')||'[]');const l=document.getElementById('cjL');if(!l)return;
+if(es.length===0){l.innerHTML='<span style="color:#94a3b8;font-size:.82em">Aucune séance.</span>';return;}
+l.innerHTML=es.map(e=>`<div class="ent"><div class="content"><strong>${e.d}</strong> • ${e.m}${e.t?' — '+e.t:''}<br><span class="m">${e.x.substring(0,100)}${e.x.length>100?'…':''}</span></div>
+<div><button class="btn sm" style="background:#fee2e2;color:#dc2626" onclick="delCJ(${e.id})">✕</button></div></div>`).join('');
+}
+function delCJ(id){let es=JSON.parse(localStorage.getItem('cj')||'[]');es=es.filter(e=>e.id!==id);localStorage.setItem('cj',JSON.stringify(es));renderCJList();}
+// EDT
+function renderEDT(c){
+const edt=JSON.parse(localStorage.getItem('edt')||'null')||{matin:['Fluence 10min','Français 1','Maths','Récré','Projet livre','Grammaire','Lecture','Sciences'],aprem:['Accueil','Fluence','Maths','Français','Récré','Projet','Arts','Bilan']};
+let h='<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">';
+h+=`<button class="btn sm" style="background:#0f172a;color:#fff" onclick="sEDT('matin')">🔆 Matin</button>`;
+h+=`<button class="btn sm" style="background:#f1f5f9" onclick="sEDT('aprem')">🌙 Après-midi</button>`;
+h+=`<button class="btn pri" onclick="localStorage.setItem('edt',JSON.stringify(edt))">💾</button></div>`;
+h+=`<div id="edtC"></div>`;
+c.innerHTML=h;renderEDTGrid('matin');
+window.sEDT=function(m){renderEDTGrid(m);};
+}
+function renderEDTGrid(m){
+const edt=JSON.parse(localStorage.getItem('edt')||'null')||{matin:['Fluence 10min','Français 1','Maths','Récré','Projet livre','Grammaire','Lecture','Sciences'],aprem:['Accueil','Fluence','Maths','Français','Récré','Projet','Arts','Bilan']};
+const c=document.getElementById('edtC');if(!c)return;
+const creneaux=edt[m]||[];
+let h='<table><tr><th>Créneau</th><th>Activité</th></tr>';
+creneaux.forEach((cr,i)=>{
+h+=`<tr><td>${i+1}</td><td><input class="in" value="${cr}" onchange="uEDT('${m}',${i},this.value)"></td></tr>`;
+});
+h+='</table>';c.innerHTML=h;
+}
+window.uEDT=function(m,i,v){const edt=JSON.parse(localStorage.getItem('edt')||'null')||{matin:[],aprem:[]};edt[m][i]=v;localStorage.setItem('edt',JSON.stringify(edt));};
+// Progression
+function renderProg(c){
+const p=JSON.parse(localStorage.getItem('prog')||'null')||{matin:['Français','Maths','Lecture','Projet'],aprem:['Français','Maths','Sciences','EPS']};
+let h='<table><tr><th>Domaine</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th></tr>';
+['Français','Lecture','Maths','Sciences','Histoire-Géo','EPS','Anglais'].forEach(d=>{
+h+=`<tr><td style="font-weight:600">${d}</td>`;
+['P1','P2','P3','P4','P5'].forEach(p=>{
+const v=JSON.parse(localStorage.getItem('prog_'+d+'_'+p)||'""');
+h+=`<td><input class="in" style="font-size:.72em;padding:2px 4px" value="${v.replace(/"/g,'')}" onchange="localStorage.setItem('prog_${d}_${p}',JSON.stringify(this.value))"></td>`;
+});
+h+='</tr>';
+});
+h+='</table>';c.innerHTML=h;
+}
+// Notes
+function renderNotes(c){
+const n=localStorage.getItem('notes')||'';
+c.innerHTML=`<textarea id="nt" class="in" style="min-height:150px">${n}</textarea>
+<div style="margin-top:6px"><button class="btn pri" onclick="localStorage.setItem('notes',document.getElementById('nt').value)">💾 Enregistrer</button></div>`;
+}
+// Init
+(function(){const c=document.getElementById('ep');if(c)rE('cj');})();
+</script>
+</section>
+
+<!-- ======================== RÉGLAGES ======================== -->
+<section id="reg" style="max-width:1020px;margin:0 auto 14px;padding:18px 20px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;scroll-margin-top:66px">
+<div class="st">⚙️ Réglages</div>
+<div class="box b">🔑 <strong>Clé API Groq</strong> — Nécessaire pour le générateur IA. Gratuite sur <a href="https://console.groq.com/keys" target="_blank" style="color:#3b82f6">console.groq.com/keys</a></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+<input type="password" id="gk" class="in" style="flex:1;min-width:150px;font-family:monospace" placeholder="gsk_...">
+<button class="btn pri" onclick="sGK()">💾</button>
+<button class="btn sm" style="background:#f1f5f9" onclick="document.getElementById('gk').type=document.getElementById('gk').type==='password'?'text':'password'">👁️</button>
+</div>
+<div id="gks" style="font-size:.78em;margin-top:4px"></div>
+<script>
+(function(){const k=localStorage.getItem('gk');if(k){document.getElementById('gk').value=k;document.getElementById('gks').textContent='✅ Clé configurée';}})();
+function sGK(){const k=document.getElementById('gk').value.trim();if(!k.startsWith('gsk_')){alert('La clé doit commencer par gsk_');return;}
+localStorage.setItem('gk',k);document.getElementById('gks').textContent='✅ Clé enregistrée';}
+</script>
+</section>
+
+<!-- ======================== FOOTER ======================== -->
 <footer>
 <div id="jsStatus" style="font-size:.65em;color:#94a3b8;margin-bottom:2px;"></div>
 Projet CM1/CM2 "Les Naufragés de l'Îlot Perdu" — Jacques Hassani Moustoifa<br>
