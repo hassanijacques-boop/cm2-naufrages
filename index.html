@@ -726,9 +726,12 @@ a.click();URL.revokeObjectURL(a.href);
 <section id="ens" class="container" style="padding:0">
 <div class="st">👨‍🏫 Mon espace enseignant <span class="badge b">Sauvegarde auto</span></div>
 <div class="tabs" id="etabs">
-<div class="tab on" data-et="cj" onclick="rE('cj')">📋 Cahier journal</div>
+<div class="tab on" data-et="cj" onclick="rE('cj')">📋 CJ</div>
 <div class="tab" data-et="edt" onclick="rE('edt')">📅 EDT</div>
-<div class="tab" data-et="prog" onclick="rE('prog')">📈 Progression</div>
+<div class="tab" data-et="eleves" onclick="rE('eleves')">👥 Élèves</div>
+<div class="tab" data-et="lsu" onclick="rE('lsu')">📊 LSU</div>
+<div class="tab" data-et="cr" onclick="rE('cr')">📝 CR</div>
+<div class="tab" data-et="prog" onclick="rE('prog')">📈 Prog</div>
 <div class="tab" data-et="notes" onclick="rE('notes')">📌 Notes</div>
 </div>
 <div id="ep"></div>
@@ -739,6 +742,9 @@ document.querySelector(`#etabs .tab[data-et="${k}"]`)?.classList.add('on');
 const c=document.getElementById('ep');if(!c)return;
 if(k==='cj') renderCJ(c);
 else if(k==='edt') renderEDT(c);
+else if(k==='eleves') renderEleves(c);
+else if(k==='lsu') renderLSU(c);
+else if(k==='cr') renderCR(c);
 else if(k==='prog') renderProg(c);
 else if(k==='notes') renderNotes(c);
 }
@@ -813,6 +819,81 @@ const n=localStorage.getItem('notes')||'';
 c.innerHTML=`<textarea id="nt" class="in" style="min-height:150px">${n}</textarea>
 <div style="margin-top:6px"><button class="btn pri" onclick="localStorage.setItem('notes',document.getElementById('nt').value)">💾 Enregistrer</button></div>`;
 }
+// Liste d'élèves
+function renderEleves(c){
+const d=JSON.parse(localStorage.getItem('eleves')||'{"list":[""]}');
+let h='<div class="box b">👥 <strong>Liste des élèves</strong> — 23 places.</div>';
+h+='<div id="elList">';
+for(let i=0;i<23;i++){
+const nom=d.list[i]||'';
+h+=`<div style="display:flex;gap:4px;margin:3px 0;align-items:center">
+  <span style="font-size:.75em;color:#94a3b8;min-width:20px">${i+1}.</span>
+  <input class="in" style="flex:1" value="${nom}" placeholder="Élève ${i+1}..." onchange="uEl(${i},this.value)">
+  <input type="checkbox" ${nom?'':'disabled'} onchange="uElCheck(${i},this.checked)">
+</div>`;
+}
+h+='</div><div style="margin-top:6px"><button class="btn pri" onclick="localStorage.setItem(\'eleves\',JSON.stringify({list:document.querySelectorAll(\'#elList input[type=text]\').length?Array.from(document.querySelectorAll(\'#elList input[type=text]\')).map(i=>i.value):[\"\"]}))">💾 Enregistrer</button></div>';
+c.innerHTML=h;
+}
+window.uEl=function(i,v){const d=JSON.parse(localStorage.getItem('eleves')||'{"list":[""]}');d.list[i]=v;localStorage.setItem('eleves',JSON.stringify(d));};
+window.uElCheck=function(i,v){const d=JSON.parse(localStorage.getItem('eleves')||'{"list":[""]}');const c=JSON.parse(localStorage.getItem('elCheck')||'{}');c[i]=v;localStorage.setItem('elCheck',JSON.stringify(c));};
+// Grille LSU
+function renderLSU(c){
+const comps={
+'Français':['Lire avec fluidité','Comprendre un texte','Rédiger un texte','Maîtriser la grammaire','Orthographier correctement','Enrichir son vocabulaire'],
+'Maths':['Résoudre des problèmes','Maîtriser les opérations','Utiliser fractions/décimaux','Calculer mentalement','Se repérer dans l\'espace','Utiliser des instruments'],
+'Histoire-Géo':['Se repérer dans le temps','Se repérer dans l\'espace','Comprendre un document','Mémoriser des repères'],
+'Sciences':['Pratiquer une démarche scientifique','Observer et décrire','Maîtriser des connaissances'],
+'EMC':['Respecter les règles','Participer à un débat','Faire preuve d\'autonomie','Coopérer'],
+'Arts':['S\'exprimer par les arts','Réaliser une production','Écouter et analyser']
+};
+const vals=JSON.parse(localStorage.getItem('lsu')||'{}');
+let h='<div class="box b">📊 <strong>Grille LSU</strong> — Compétences par période (clique pour cocher).</div>';
+Object.keys(comps).forEach(m=>{
+h+=`<details style="margin:4px 0" open><summary style="font-weight:600;font-size:.85em">${m} (${comps[m].length})</summary><div class="body"><table><tr><th>Compétence</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th></tr>`;
+comps[m].forEach(c=>{
+h+=`<tr><td>${c}</td>`;
+['P1','P2','P3','P4','P5'].forEach(p=>{
+const key=m+'_'+c+'_'+p;
+const checked=vals[key]?' checked':'';
+h+=`<td style="text-align:center"><input type="checkbox"${checked} onchange="uLSU('${key}',this.checked)"></td>`;
+});
+h+='</tr>';
+});
+h+='</table></div></details>';
+});
+c.innerHTML=h;
+}
+window.uLSU=function(k,v){const d=JSON.parse(localStorage.getItem('lsu')||'{}');d[k]=v;localStorage.setItem('lsu',JSON.stringify(d));};
+// Compte-rendus
+function renderCR(c){
+const crs=JSON.parse(localStorage.getItem('crs')||'[]');
+c.innerHTML=`<div class="box b">📝 <strong>Comptes-rendus</strong> — ${crs.length} réunion(s).</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+  <input type="date" id="crD" class="in" style="width:auto;flex:0 0 150px" value="${new Date().toISOString().split('T')[0]}">
+  <select id="crT" class="in" style="width:auto;flex:0 0 150px"><option>Réunion parents</option><option>Conseil d'école</option><option>Conseil de cycle</option><option>Réunion équipe</option><option>Rendez-vous parental</option><option>Autre</option></select>
+  <input id="crS" class="in" style="width:auto;flex:1;min-width:100px" placeholder="Sujet ou nom élève...">
+</div>
+<textarea id="crX" class="in" style="min-height:100px" placeholder="Compte-rendu..."></textarea>
+<div style="margin:6px 0"><button class="btn pri" onclick="sCR()">💾 Enregistrer</button></div>
+<div id="crL"></div>`;
+renderCRList();
+}
+function sCR(){
+const d=document.getElementById('crD').value,t=document.getElementById('crT').value,s=document.getElementById('crS').value.trim(),x=document.getElementById('crX').value.trim();
+if(!x){alert('Écris le compte-rendu.');return;}
+const crs=JSON.parse(localStorage.getItem('crs')||'[]');
+crs.unshift({id:Date.now(),date:d,type:t,sujet:s,contenu:x});
+localStorage.setItem('crs',JSON.stringify(crs));
+document.getElementById('crX').value='';document.getElementById('crS').value='';renderCRList();
+}
+function renderCRList(){
+const crs=JSON.parse(localStorage.getItem('crs')||'[]');const l=document.getElementById('crL');if(!l)return;
+if(crs.length===0){l.innerHTML='<span style="color:#94a3b8;font-size:.82em">Aucun compte-rendu.</span>';return;}
+l.innerHTML=crs.map(cr=>`<div class="ent"><div class="content"><strong>${cr.date}</strong> • ${cr.type}${cr.sujet?' — '+cr.sujet:''}<br><span class="m">${cr.contenu.substring(0,120)}${cr.contenu.length>120?'…':''}</span></div>
+<div><button class="btn sm" style="background:#fee2e2;color:#dc2626" onclick="delCR(${cr.id})">✕</button></div></div>`).join('');
+}
+function delCR(id){let crs=JSON.parse(localStorage.getItem('crs')||'[]');crs=crs.filter(c=>c.id!==id);localStorage.setItem('crs',JSON.stringify(crs));renderCRList();}
 // Init
 (function(){const c=document.getElementById('ep');if(c)rE('cj');})();
 </script>
@@ -828,6 +909,40 @@ c.innerHTML=`<textarea id="nt" class="in" style="min-height:150px">${n}</textare
 <button class="btn sm" style="background:#f1f5f9" onclick="document.getElementById('gk').type=document.getElementById('gk').type==='password'?'text':'password'">👁️</button>
 </div>
 <div id="gks" style="font-size:.78em;margin-top:4px"></div>
+<hr style="margin:16px 0;border:none;border-top:1px solid #e2e8f0">
+<div class="box g" style="margin-bottom:8px"><strong>📦 Sauvegarde complète</strong> — Exporte ou importe toutes tes données d'un coup.</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+  <button class="btn pri" onclick="exportAllData()">📤 Tout exporter</button>
+  <button class="btn" style="background:#f1f5f9" onclick="importAllData()">📥 Tout importer</button>
+</div>
+<script>
+// Export/Import toutes données
+window.exportAllData=function(){
+const keys=['cj','edt','prog','notes','gk','pj_st','clsFiches','eleves','elCheck','lsu','crs'];
+const data={};keys.forEach(k=>{const v=localStorage.getItem(k);if(v)data[k]=v;});
+data._exportedAt=new Date().toISOString();data._site='cm2-naufrages';
+const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+a.download='sauvegarde_cm2_'+new Date().toISOString().split('T')[0]+'.json';
+a.click();URL.revokeObjectURL(a.href);
+};
+window.importAllData=function(){
+const input=document.createElement('input');input.type='file';input.accept='.json';
+input.onchange=function(e){
+const file=e.target.files[0];if(!file)return;
+const reader=new FileReader();
+reader.onload=function(ev){
+try{
+const data=JSON.parse(ev.target.result);let count=0;
+Object.keys(data).forEach(k=>{if(k.startsWith('_'))return;localStorage.setItem(k,data[k]);count++;});
+alert('✅ '+count+' éléments restaurés. Recharge la page pour voir les données.');
+}catch(e){alert('❌ Fichier invalide: '+e.message);}
+};
+reader.readAsText(file);
+};
+input.click();
+};
+</script>
 <script>
 (function(){const k=localStorage.getItem('gk');if(k){document.getElementById('gk').value=k;document.getElementById('gks').textContent='✅ Clé configurée';}})();
 function sGK(){const k=document.getElementById('gk').value.trim();if(!k.startsWith('gsk_')){alert('La clé doit commencer par gsk_');return;}
