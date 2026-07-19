@@ -215,6 +215,7 @@
     <a href="#accueil">Accueil</a>
     <a href="#contexte">Contexte</a>
     <a href="#annuel">Plan</a>
+    <a href="#projets">Projets</a>
     <a href="#p1">P1</a>
     <a href="#p2">P2</a>
     <a href="#p3">P3</a>
@@ -434,6 +435,23 @@ function collapseAll() { document.querySelectorAll('details').forEach(d => d.ope
   <div class="box blue" style="margin-top:10px;font-size:0.85em;">
     <strong>Progression Parole :</strong> 🔧 Technique → 🎭 Interprétation → 🌍 Spatialisation → 🎤 Conviction → 🏆 Performance
   </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJETS -->
+<!-- ============================================================ -->
+<section id="projets">
+  <div class="section-title">
+    🎯 Projets pédagogiques <a class="anchor" href="#projets">#</a>
+    <span class="badge blue">Suivi modifiable</span>
+    <span class="badge green">1 grand + 5 petits</span>
+  </div>
+  <p style="font-size:0.85em;color:#64748b;margin-bottom:10px;">
+    Tous les projets de l'année classés avec objectifs, compétences, déroulement et statut.
+    Clique sur <strong>Modifier</strong> pour personnaliser le statut de chaque projet.
+  </p>
+
+  <div id="projetsContainer"></div>
 </section>
 
 <!-- ============================================================ -->
@@ -994,6 +1012,303 @@ document.addEventListener('DOMContentLoaded', () => {
   if (notes) document.getElementById('notesContent').value = notes;
   renderProgression();
   renderProgrammation();
+});
+
+// ===== PROJETS =====
+const PROJETS_DATA = [
+  {
+    id: 'grand-projet',
+    titre: '📖 Grand Projet Annuel : Les Naufragés de l\'Îlot Perdu',
+    type: 'Fil rouge',
+    periode: 'P1 → P5',
+    statut: 'en-cours',
+    objectifs: [
+      'Produire un récit d\'aventure complet (prologue + 7 chapitres + épilogue)',
+      'Maîtriser la structure narrative (situation initiale → élément déclencheur → péripéties → résolution → situation finale)',
+      'Développer le lexique de la survie et de l\'aventure',
+      'Utiliser à bon escient les temps du récit (passé simple / imparfait)',
+      'Collaborer en groupes hétérogènes (5 groupes de 4-5 élèves)',
+      'Produire un objet-livre imprimé et illustré'
+    ],
+    competences: [
+      'Français : rédiger un texte cohérent de 15-20 lignes',
+      'Français : employer le passé simple et l\'imparfait',
+      'Français : utiliser des connecteurs temporels et logiques',
+      'Français : enrichir son lexique (synonymes, nuances)',
+      'EMC : coopérer, accepter les critiques, s\'entraider',
+      'Arts : illustrer, mettre en page, créer une couverture'
+    ],
+    etapes: [
+      { titre: 'P1 — Fondations', desc: 'Création des héros, prologue, Chap.1 (pirogue perdue + abri)' },
+      { titre: 'P2 — L\'eau', desc: 'Chap.2-3 : recherche d\'eau douce, exploration, rencontre animale' },
+      { titre: 'P3 — Le feu', desc: 'Chap.4-5 : faire du feu, pêcher, cueillir, exploreration de la grotte' },
+      { titre: 'P4 — La tempête', desc: 'Chap.6-7 : tempête tropicale, blessure, solidarité des héros' },
+      { titre: 'P5 — Délivrance', desc: 'Épilogue : signal de fumée, secours, retrouvailles + impression du livre' }
+    ],
+    livrable: 'Livre imprimé (prologue + 7 chap. + épilogue), illustré, offert aux familles et au CDI du collège',
+    lien_vae: 'Projet fédérateur couvrant l\'intégralité des domaines 1 et 2 du socle. Différenciation proactive par groupe de niveau.'
+  },
+  {
+    id: 'p1-chuchoteuses',
+    titre: '🎤 P1 — Les Chuchoteuses de la Rentrée',
+    type: 'Projet de période',
+    periode: 'P1 (Sept-Oct)',
+    statut: 'a-venir',
+    objectifs: [
+      'Fabriquer un outil de fluence individuel (whisper phone)',
+      'Installer le rituel quotidien de lecture chuchotée (10 min/jour)',
+      'Créer une dynamique de classe dès la rentrée (activité manuelle collective)',
+      'Favoriser l\'autocorrection en lecture (l\'élève s\'entend lire)',
+      'Personnaliser son outil pour favoriser l\'appropriation'
+    ],
+    competences: [
+      'Français : lire à voix haute avec fluidité (90-110 mots/min)',
+      'Français : autocorriger sa lecture en temps réel',
+      'EMC : respecter le matériel collectif et individuel',
+      'Arts : personnaliser un objet utilitaire'
+    ],
+    etapes: [
+      { titre: 'Étape 1 — Présentation', desc: '15 min : montrer le modèle, expliquer le "pourquoi"' },
+      { titre: 'Étape 2 — Fabrication', desc: '30-45 min : assemblage tube + coudes PVC, décoration libre' },
+      { titre: 'Étape 3 — Premier essai', desc: '15 min : texte court distribué, lecture chuchotée collective' }
+    ],
+    livrable: 'Une chuchoteuse personnalisée par élève. Rituel fluence installé pour l\'année.',
+    materiel: 'Tube PVC 8-10cm (Ø32-40mm) + 2 coudes 90° + chatterton/colle + autocollants/washi tape',
+    lien_vae: 'Projet utilitaire permettant d\'installer durablement le rituel de fluence. Lien avec l\'automatisation du décodage (BO Français Cycle 3).'
+  },
+  {
+    id: 'p2-defi-lecture',
+    titre: '🏆 P2 — Défi Lecture',
+    type: 'Projet de période',
+    periode: 'P2 (Nov-Déc)',
+    statut: 'a-venir',
+    objectifs: [
+      'Améliorer la vitesse de lecture (score MCLM)',
+      'Développer la compréhension implicite et explicite',
+      'Travailler l\'expressivité et le respect de la ponctuation',
+      'Motiver par le défi personnel (progression individuelle)',
+      'Passer de la technique (décodage) à l\'interprétation (ton, rythme)'
+    ],
+    competences: [
+      'Français : lire avec fluidité et expressivité',
+      'Français : comprendre un texte narratif (implicite inclus)',
+      'Maths : mesurer sa progression (score, data)',
+      'EMC : se fixer des objectifs personnels'
+    ],
+    etapes: [
+      { titre: 'Lancement', desc: 'Test initial 1 min (score MCLM). Tableau de suivi individuel.' },
+      { titre: 'Entraînement', desc: 'Lecture répétée du même texte (chuchoteuse) + questionnaire différencié 3 niveaux' },
+      { titre: 'Finale', desc: 'Re-test. Comparaison score initial/final. Valorisation de la progression personnelle.' }
+    ],
+    livrable: 'Fiche de suivi individuelle avec courbe de progression. Passage à la lecture expressive.',
+    lien_vae: 'Évaluation positive par la progression personnelle. Différenciation des textes et questionnaires.'
+  },
+  {
+    id: 'p3-cartographie',
+    titre: '🗺️ P3 — Cartographie de l\'Îlot',
+    type: 'Projet de période',
+    periode: 'P3 (Jan-Fév)',
+    statut: 'a-venir',
+    objectifs: [
+      'Réaliser une carte en grand format de l\'îlot (échelle, orientation, légende)',
+      'Lier géographie et littérature (les péripéties se situent sur la carte)',
+      'Travailler le repérage spatial et les notions d\'échelle',
+      'Donner du relief aux descriptions écrites'
+    ],
+    competences: [
+      'Géographie : échelle, orientation, légende, plan',
+      'Géométrie : repérage, angles, distances',
+      'Français : décrire un espace, situer des actions dans l\'espace',
+      'Arts : réaliser une production collective'
+    ],
+    etapes: [
+      { titre: 'Création de la carte', desc: 'Papier kraft, dessin collectif de l\'îlot (plage, colline, grotte, marais, source)' },
+      { titre: 'Éléments cartographiques', desc: 'Échelle (1cm=100m), rose des vents, légende complète' },
+      { titre: 'Lien avec le livre', desc: 'Chaque péripétie des Chap.4-5 est positionnée sur la carte' }
+    ],
+    livrable: 'Carte grand format affichée en classe + intégration dans le livre (page de garde)',
+    materiel: 'Papier kraft, feutres, règle, compas, crayons de couleur',
+    lien_vae: 'Projet interdisciplinaire géographie/littérature. L\'élève à lenteur graphique participe à la carte (motricité fine valorisée).'
+  },
+  {
+    id: 'p4-eloquence',
+    titre: '🎯 P4 — Défi Éloquence',
+    type: 'Projet de période',
+    periode: 'P4 (Mars-Avr)',
+    statut: 'a-venir',
+    objectifs: [
+      'Travailler la posture, le regard et la voix posée',
+      'Apprendre à argumenter et à convaincre',
+      'Développer l\'écoute et le respect de la parole de l\'autre',
+      'Préparer la mise en scène théâtrale de P5',
+      'Structurer un discours (introduction, développement, conclusion)'
+    ],
+    competences: [
+      'Français : s\'exprimer oralement de façon claire et structurée',
+      'Français : argumenter, justifier un point de vue',
+      'EMC : écouter, respecter les opinions, débattre',
+      'EMC : adopter une posture adaptée à la prise de parole'
+    ],
+    etapes: [
+      { titre: 'Modelage', desc: 'Qu\'est-ce que convaincre ? Posture, regard, voix. Exemples "bonne/mauvaise" posture.' },
+      { titre: 'Entraînement', desc: 'Mini-débats en binômes (pour/contre). Sujet : "Faut-il quitter l\'îlot ?"' },
+      { titre: 'Finale', desc: 'Présentation d\'un extrait du Chap.6 joué avec intensité (voix + corps)' }
+    ],
+    livrable: 'Prestance orale + capacité à argumenter. Préparation directe au théâtre P5.',
+    lien_vae: 'Progression Parole : 4e étape avant la performance théâtrale. Évaluation par grille critériée (posture, voix, émotion).'
+  },
+  {
+    id: 'p5-theatre',
+    titre: '🎭 P5 — Projet Théâtre',
+    type: 'Projet de période',
+    periode: 'P5 (Mai-Juin)',
+    statut: 'a-venir',
+    objectifs: [
+      'Mettre en scène des extraits du livre écrit collectivement',
+      'Travailler l\'expression corporelle, la voix et la gestion du trac',
+      'Se produire devant un public (parents, collège)',
+      'Créer un événement de liaison école-collège',
+      'Valoriser le travail d\'écriture de l\'année'
+    ],
+    competences: [
+      'Arts : jeu théâtral, expression corporelle',
+      'Français : restituer un texte avec émotion et justesse',
+      'EMC : coopérer, gérer le trac, représenter la classe',
+      'EMC : s\'adresser à un public, gérer l\'espace scénique'
+    ],
+    etapes: [
+      { titre: 'Choix des scènes', desc: '3-4 scènes clés du livre sélectionnées par la classe' },
+      { titre: 'Distribution', desc: 'Rôles différenciés : narrateurs, personnages, bruiteurs, régisseur' },
+      { titre: 'Répétitions', desc: 'Voix, posture, déplacements. Carte de l\'îlot comme décor.' },
+      { titre: 'Représentation', desc: 'Devant les parents + profs du collège. Livre offert au CDI.' }
+    ],
+    livrable: 'Représentation théâtrale (20-30 min) + livre imprimé remis aux familles',
+    lien_vae: 'Point d\'orgue du projet annuel. Liaison école-collège concrète. L\'élève à lenteur graphique brille en tant que narrateur ou personnage.'
+  }
+];
+
+function renderProjets() {
+  const container = document.getElementById('projetsContainer');
+  if (!container) return;
+  
+  const statusData = JSON.parse(localStorage.getItem('ee_projets_status') || '{}');
+  
+  // Projets par type
+  const grand = PROJETS_DATA.find(p => p.type === 'Fil rouge');
+  const petits = PROJETS_DATA.filter(p => p.type === 'Projet de période');
+  
+  let html = '';
+  
+  // Grand projet
+  html += projetCard(grand, statusData);
+  
+  // Petits projets
+  html += '<h4 style="margin:16px 0 8px;font-size:0.95em;">📦 Projets de période</h4>';
+  html += '<div class="grid2">';
+  petits.forEach(p => { html += projetCard(p, statusData, true); });
+  html += '</div>';
+  
+  container.innerHTML = html;
+}
+
+function projetCard(projet, statusData, compact = false) {
+  const statut = statusData[projet.id] || projet.statut;
+  const statutColors = { 'a-venir': '#94a3b8', 'en-cours': '#f59e0b', 'termine': '#22c55e', 'abandonne': '#ef4444' };
+  const statutLabels = { 'a-venir': '📅 À venir', 'en-cours': '🔄 En cours', 'termine': '✅ Terminé', 'abandonne': '❌ Abandonné' };
+  
+  if (compact) {
+    return `<div class="card" style="padding:14px;border-left:4px solid ${statutColors[statut]};">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
+        <h4 style="font-size:0.92em;">${projet.titre}</h4>
+        <span style="font-size:0.7em;color:#64748b;">${projet.periode}</span>
+      </div>
+      <div style="font-size:0.8em;color:#475569;margin:4px 0;">
+        <strong>${projet.objectifs.length} objectifs</strong> • ${projet.etapes.length} étapes
+      </div>
+      <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+        <span style="font-size:0.75em;padding:2px 10px;border-radius:10px;background:${statutColors[statut]}20;color:${statutColors[statut]};font-weight:600;">${statutLabels[statut]}</span>
+        <button class="ee-btn small" style="font-size:0.7em;" onclick="toggleProjetDetails('${projet.id}')">📋 Détails</button>
+        <select style="font-size:0.7em;padding:2px 6px;border:1px solid #e2e8f0;border-radius:6px;" onchange="updateProjetStatus('${projet.id}', this.value)">
+          <option value="a-venir" ${statut==='a-venir'?'selected':''}>📅 À venir</option>
+          <option value="en-cours" ${statut==='en-cours'?'selected':''}>🔄 En cours</option>
+          <option value="termine" ${statut==='termine'?'selected':''}>✅ Terminé</option>
+          <option value="abandonne" ${statut==='abandonne'?'selected':''}>❌ Abandonné</option>
+        </select>
+      </div>
+      <div id="details-${projet.id}" style="display:none;margin-top:8px;border-top:1px solid #e2e8f0;padding-top:8px;font-size:0.85em;">
+        ${renderProjetDetail(projet)}
+      </div>
+    </div>`;
+  }
+  
+  return `<div class="card" style="padding:18px;margin-bottom:12px;border-left:4px solid ${statutColors[statut]};">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+      <div>
+        <h4 style="font-size:1em;">${projet.titre}</h4>
+        <div style="font-size:0.78em;color:#64748b;">${projet.type} • ${projet.periode}</div>
+      </div>
+      <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+        <span style="font-size:0.78em;padding:3px 12px;border-radius:12px;background:${statutColors[statut]}20;color:${statutColors[statut]};font-weight:600;">${statutLabels[statut]}</span>
+        <select style="font-size:0.75em;padding:3px 8px;border:1px solid #e2e8f0;border-radius:8px;" onchange="updateProjetStatus('${projet.id}', this.value)">
+          <option value="a-venir" ${statut==='a-venir'?'selected':''}>📅 À venir</option>
+          <option value="en-cours" ${statut==='en-cours'?'selected':''}>🔄 En cours</option>
+          <option value="termine" ${statut==='termine'?'selected':''}>✅ Terminé</option>
+          <option value="abandonne" ${statut==='abandonne'?'selected':''}>❌ Abandonné</option>
+        </select>
+      </div>
+    </div>
+    ${renderProjetDetail(projet)}
+  </div>`;
+}
+
+function renderProjetDetail(projet) {
+  let html = '';
+  
+  html += '<details><summary>🎯 Objectifs pédagogiques</summary><div class="body"><ul>';
+  projet.objectifs.forEach(o => { html += `<li>${o}</li>`; });
+  html += '</ul></div></details>';
+  
+  html += '<details><summary>📚 Compétences travaillées</summary><div class="body"><ul>';
+  projet.competences.forEach(c => { html += `<li>${c}</li>`; });
+  html += '</ul></div></details>';
+  
+  html += '<details><summary>📋 Déroulement (' + projet.etapes.length + ' étapes)</summary><div class="body">';
+  projet.etapes.forEach((e, i) => {
+    html += `<div style="margin:6px 0;padding:6px 10px;background:#f8fafc;border-radius:6px;border-left:3px solid #f59e0b;">
+      <strong>${e.titre}</strong><br><span style="font-size:0.9em;color:#475569;">${e.desc}</span>
+    </div>`;
+  });
+  html += '</div></details>';
+  
+  if (projet.livrable) {
+    html += `<div class="box green" style="margin:8px 0;"><strong>📦 Livrable :</strong> ${projet.livrable}</div>`;
+  }
+  
+  if (projet.materiel) {
+    html += `<div class="box blue" style="margin:8px 0;"><strong>🧰 Matériel :</strong> ${projet.materiel}</div>`;
+  }
+  
+  html += `<div class="box yellow" style="margin:8px 0;"><strong>📋 CAPPEI VAE :</strong> ${projet.lien_vae}</div>`;
+  
+  return html;
+}
+
+function toggleProjetDetails(id) {
+  const el = document.getElementById('details-' + id);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function updateProjetStatus(id, status) {
+  const data = JSON.parse(localStorage.getItem('ee_projets_status') || '{}');
+  data[id] = status;
+  localStorage.setItem('ee_projets_status', JSON.stringify(data));
+  renderProjets();
+  toast('✅ Statut mis à jour');
+}
+
+// Render projects on load (called from DOMContentLoaded)
+document.addEventListener('DOMContentLoaded', () => {
+  renderProjets();
 });
 
 // ===== TOAST NOTIFICATIONS =====
