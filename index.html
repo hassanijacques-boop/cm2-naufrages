@@ -222,6 +222,7 @@
     <a href="#p4">P4</a>
     <a href="#p5">P5</a>
     <a href="#outils">Outils</a>
+    <a href="#progressions">📈</a>
     <a href="#fiches">Fiches</a>
     <a href="#reglages">⚙️</a>
     <a href="#bo">BO</a>
@@ -839,6 +840,22 @@ function collapseAll() { document.querySelectorAll('details').forEach(d => d.ope
       </table>
     </div>
   </details>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROGRESSIONS PAR MATIÈRE -->
+<!-- ============================================================ -->
+<section id="progressions">
+  <div class="section-title">
+    📈 Progressions par matière <a class="anchor" href="#progressions">#</a>
+    <span class="badge blue">CM1/CM2</span>
+    <span class="badge green">P1→P5</span>
+  </div>
+  <p style="font-size:0.85em;color:#64748b;margin-bottom:10px;">
+    Progressions détaillées par discipline sur les 5 périodes. Clique sur une matière pour voir le détail.
+  </p>
+
+  <div id="progressionsContainer"></div>
 </section>
 
 <!-- ============================================================ -->
@@ -1905,7 +1922,310 @@ document.addEventListener('DOMContentLoaded', () => {
   initFiches();
 });
 
-// ===== NAVIGATION ACTIVE =====
+// ===== PROGRESSIONS PAR MATIÈRE =====
+const PROGRESSIONS_DATA = [
+  {
+    categorie: '📖 Français',
+    couleur: '#3b82f6',
+    matieres: [
+      {
+        nom: 'Grammaire',
+        p1: 'La phrase (simple/complexe). Nature des mots (nom, verbe, adjectif, déterminant, pronom).',
+        p2: 'Fonctions grammaticales (sujet, verbe, COD, COI). Connecteurs temporels.',
+        p3: 'L\'expansion du nom (adjectif, complément du nom, proposition relative).',
+        p4: 'Le discours rapporté (discours direct/indirect). La proposition subordonnée.',
+        p5: 'Révision générale. Consolidation des acquis du cycle 3.',
+        cm1: 'CM1 : Phrase simple. Nature des mots (nom, verbe, adj, dét, pron). CM2 : Fonctions, connecteurs, expansion du nom, discours rapporté.',
+        bo: 'BO n°31 du 30/07/2020 — Français Cycle 3'
+      },
+      {
+        nom: 'Conjugaison',
+        p1: 'Présent de l\'indicatif (1er, 2e, 3e groupe). Impératif présent.',
+        p2: 'Imparfait de l\'indicatif. Passé composé. Passé simple (3e pers. sing./plur.).',
+        p3: 'Futur simple. Conditionnel présent. Passé simple (toutes personnes).',
+        p4: 'Plus-que-parfait. Participe passé. Révision des temps du récit.',
+        p5: 'Révision générale. Consolidation : les temps du récit (imparfait/passé simple).',
+        cm1: 'CM1 : Présent, imparfait, futur, passé composé. CM2 : Passé simple, conditionnel, plus-que-parfait.',
+        bo: 'Repères annuels de progression — Français Cycle 3'
+      },
+      {
+        nom: 'Orthographe',
+        p1: 'Accord sujet-verbe. Accord dans le GN (déterminant/nom/adjectif).',
+        p2: 'Accord du participe passé (employé avec être). Mots invariables (liste 1).',
+        p3: 'Accord du participe passé (avec avoir). Mots invariables (liste 2). Homophones grammaticaux.',
+        p4: 'Révision des accords. Pluriel des noms composés. Mots invariables (liste 3).',
+        p5: 'Révision générale. Dictée bilan. Consolidation orthographique.',
+        cm1: 'CM1 : Accord S/V, GN. Participe passé avec être. CM2 : Participe passé avec avoir, homophones, noms composés.',
+        bo: 'BO n°31 du 30/07/2020 — Français Cycle 3'
+      },
+      {
+        nom: 'Vocabulaire / Lexique',
+        p1: 'Familles de mots. Préfixes et suffixes. Le dictionnaire.',
+        p2: 'Synonymes et antonymes. Les registres de langue. Mots du récit d\'aventure.',
+        p3: 'Sens propre / sens figuré. Les expressions imagées. Champ lexical de la nature.',
+        p4: 'La formation des mots (dérivation, composition). Les nuances de sens. Intensité.',
+        p5: 'Révision et enrichissement. Bilan lexical du projet livre.',
+        cm1: 'CM1 : Familles, préfixes/suffixes, synonymes. CM2 : Sens propre/figuré, formation des mots, nuances.',
+        bo: 'BO n°31 du 30/07/2020 — Français Cycle 3'
+      },
+      {
+        nom: 'Lecture — Compréhension',
+        p1: 'Stratégies de lecture. Repérer les informations explicites. Le récit d\'aventure (modèles).',
+        p2: 'Compréhension implicite (inférences). Le personnage et ses motivations.',
+        p3: 'Lecture documentaire (cartes, schémas, textes informatifs). Repérage.',
+        p4: 'Lecture expressive. Comprendre l\'implicite d\'un récit complexe. Débat interprétatif.',
+        p5: 'Lecture théâtrale. Mise en voix. Compréhension fine d\'un texte long.',
+        cm1: 'CM1 : Inférences simples. Texte narratif 90 mots. CM2 : Inférences complexes. Texte 110 mots.',
+        bo: 'Attendus de fin d\'année — Français Cycle 3'
+      },
+      {
+        nom: 'Fluence',
+        p1: 'Mise en place : chuchoteuse, lecture répétée, score MCLM initial. Objectif : décodage.',
+        p2: 'Défi Lecture : chronométrage, progression personnelle. Passage à l\'expressivité.',
+        p3: 'Lecture de cartes et documents. Fluidité avec support non-narratif.',
+        p4: 'Lecture argumentée. Ton, posture, regard (préparation éloquence).',
+        p5: 'Performance théâtrale. Lecture scénique avec émotion et corps.',
+        cm1: 'CM1 : 90 mots/min en fin d\'année. CM2 : 110 mots/min en fin d\'année.',
+        bo: 'Guide La Fluence — Eduscol'
+      },
+      {
+        nom: 'Production d\'écrits',
+        p1: 'Le récit d\'aventure : structure, personnages. Écriture collective (prologue + Chap.1).',
+        p2: 'Les connecteurs temporels. Écriture collaborative (Chap.2-3). Le dialogue.',
+        p3: 'La description technique et spatiale. Les expansions du nom. Écriture (Chap.4-5).',
+        p4: 'Le discours rapporté. Écrire un pic dramatique. Le dialogue argumentatif. Écriture (Chap.6-7).',
+        p5: 'Écrire une fin satisfaisante. Révision et correction. Mise en page du livre.',
+        cm1: 'CM1 : Texte 10 lignes. CM2 : Texte 15-20 lignes avec contraintes.',
+        bo: 'Attendus de fin d\'année — Français Cycle 3'
+      }
+    ]
+  },
+  {
+    categorie: '➕ Mathématiques',
+    couleur: '#f59e0b',
+    matieres: [
+      {
+        nom: 'Nombres',
+        p1: 'Nombres entiers jusqu\'au million (CM1) / milliard (CM2). Numération de position. Comparaison, rangement.',
+        p2: 'Fractions simples et décimales (CM2). Encadrement. Repérage sur une droite graduée.',
+        p3: 'Nombres décimaux : addition, soustraction. Multiplication et division par 10/100/1000.',
+        p4: 'Nombres décimaux : multiplication, division. Proportionnalité (passage à l\'unité).',
+        p5: 'Révision. Nombres entiers, fractions, décimaux. Problèmes complexes.',
+        cm1: 'CM1 : Entiers jusqu\'au million, fractions simples. CM2 : Entiers jusqu\'au milliard, fractions décimales.',
+        bo: 'BO n°31 du 30/07/2020 — Mathématiques Cycle 3'
+      },
+      {
+        nom: 'Calcul',
+        p1: 'Addition et soustraction posées (nombres entiers). Tables de multiplication (révision).',
+        p2: 'Multiplication posée (entiers). Division euclidienne. Calcul mental.',
+        p3: 'Division posée (CM2). Addition et soustraction de décimaux. Tables jusqu\'à 12.',
+        p4: 'Multiplication de décimaux. Division de décimaux (CM2). Calcul mental avancé.',
+        p5: 'Révision des 4 opérations. Problèmes complexes. Calcul mental de rapidité.',
+        cm1: 'CM1 : + - × posés, division simple. CM2 : Division posée, décimaux.',
+        bo: 'BO n°31 du 30/07/2020 — Mathématiques Cycle 3'
+      },
+      {
+        nom: 'Géométrie',
+        p1: 'Figures planes : carré, rectangle, triangle, cercle. Instruments (règle, équerre, compas).',
+        p2: 'Symétrie axiale. Reconnaître et tracer des figures symétriques.',
+        p3: 'Repérage et déplacement sur un plan / une carte. Échelle, orientation, angles droits.',
+        p4: 'Solides : cube, pavé droit, pyramide, cylindre. Patrons. Parallélépipède.',
+        p5: 'Agrandissement / réduction de figures. Révision. Géométrie dans l\'espace.',
+        cm1: 'CM1 : Figures planes, symétrie. CM2 : Cercles, solides, repérage.',
+        bo: 'BO n°31 du 30/07/2020 — Mathématiques Cycle 3'
+      },
+      {
+        nom: 'Grandeurs et mesures',
+        p1: 'Longueurs (m, km). Conversions simples. Périmètre du carré et du rectangle.',
+        p2: 'Masses (g, kg). Capacités (L, cL). Durées (h, min, s). Conversions.',
+        p3: 'Aires : notion, comparaison. Aire du carré et du rectangle. Monnaie.',
+        p4: 'Angles : notion, comparaison, estimation. Volume (cube). Températures.',
+        p5: 'Proportionnalité : échelle, pourcentage. Révision. Problèmes de mesures.',
+        cm1: 'CM1 : Longueurs, masses, durées. CM2 : Aires, volumes, angles, proportionnalité.',
+        bo: 'BO n°31 du 30/07/2020 — Mathématiques Cycle 3'
+      },
+      {
+        nom: 'Résolution de problèmes',
+        p1: 'Problèmes à une étape (+, -). Schématisation. Question / réponse.',
+        p2: 'Problèmes à deux étapes. Multiples et diviseurs. Choix de l\'opération.',
+        p3: 'Problèmes avec fractions et décimaux. Proportionnalité (tableaux).',
+        p4: 'Problèmes de mesures et de géométrie. Problèmes à données manquantes.',
+        p5: 'Problèmes complexes à plusieurs étapes. Problèmes ouverts. Bilan.',
+        cm1: 'CM1 : Problèmes simples. CM2 : Problèmes complexes, proportionnalité.',
+        bo: 'BO n°31 du 30/07/2020 — Mathématiques Cycle 3'
+      }
+    ]
+  },
+  {
+    categorie: '🌍 Histoire & Géographie',
+    couleur: '#8b5cf6',
+    matieres: [
+      {
+        nom: 'Histoire — Repères temporels',
+        p1: 'Les grandes périodes historiques. La frise chronologique. Les siècles.',
+        p2: 'L\'Antiquité (inventions, Gallo-romains). Le Moyen Âge (châteaux, chevaliers).',
+        p3: 'Les Grandes Découvertes (Christophe Colomb). La Renaissance.',
+        p4: 'L\'époque moderne. Louis XIV. Les Lumières.',
+        p5: 'La Révolution française. Le 19e siècle. Le 20e siècle (repères).',
+        cm1: 'CM1 : Repères chronologiques, Antiquité, Moyen Âge. CM2 : Temps modernes, Révolution, 19e-20e.',
+        bo: 'BO n°31 du 30/07/2020 — Histoire-Géo Cycle 3'
+      },
+      {
+        nom: 'Géographie — Continents et océans',
+        p1: 'Planisphère : continents, océans. Les points cardinaux. Se repérer sur la Terre.',
+        p2: 'Les océans et les mers. Les climats. Les zones climatiques.',
+        p3: 'Les grands repères terrestres : équateur, tropiques, cercles polaires. Les latitudes.',
+        p4: 'Les pays du monde (repères). Les grandes villes. Les capitales.',
+        p5: 'Les échanges mondiaux. Le développement durable. Révision.',
+        cm1: 'CM1 : Continents, océans, points cardinaux. CM2 : Repères terrestres, pays, échanges.',
+        bo: 'BO n°31 du 30/07/2020 — Histoire-Géo Cycle 3'
+      },
+      {
+        nom: 'Géographie — France',
+        p1: 'La France : situation, frontières, pays voisins. Les départements d\'outre-mer (Mayotte).',
+        p2: 'Le relief français. Les fleuves. Les climats en France.',
+        p3: 'Les grandes villes françaises. Les régions. Les transports.',
+        p4: 'L\'organisation administrative : commune, département, région. Mayotte.',
+        p5: 'La France dans le monde (DOM-TOM, influence). Révision.',
+        cm1: 'CM1 : Situation, relief, fleuves, grandes villes. CM2 : Organisation administrative, outre-mer, France dans le monde.',
+        bo: 'BO n°31 du 30/07/2020 — Histoire-Géo Cycle 3'
+      }
+    ]
+  },
+  {
+    categorie: '🔬 Sciences',
+    couleur: '#22c55e',
+    matieres: [
+      {
+        nom: 'Sciences — Matière et vivant',
+        p1: 'Les besoins des êtres vivants (eau, nourriture, air). L\'alimentation (projet Robinson).',
+        p2: 'L\'eau : états, cycle de l\'eau. L\'eau potable et l\'eau salée (lien projet P2).',
+        p3: 'Le système solaire. La Terre dans le système solaire. Les planètes.',
+        p4: 'Le corps humain : mouvement, respiration, digestion. Les besoins du corps.',
+        p5: 'Les végétaux : croissance, reproduction. Écosystèmes (la forêt, le lagon).',
+        cm1: 'CM1 : Besoins vitaux, états de l\'eau, système solaire. CM2 : Corps humain, végétaux, écosystèmes.',
+        bo: 'BO n°31 du 30/07/2020 — Sciences Cycle 3'
+      },
+      {
+        nom: 'Sciences — Technologie',
+        p1: 'Objets techniques : à quoi ça sert ? Fonction d\'usage et fonction d\'estime.',
+        p2: 'Les matériaux (bois, métal, plastique, tissu). Propriétés et recyclage.',
+        p3: 'Les machines simples (levier, roue, poulie). Mécanismes.',
+        p4: 'L\'énergie : sources (renouvelables / non renouvelables). Économies d\'énergie.',
+        p5: 'Le numérique : traitement de texte, recherche documentaire. Création du livre numérique.',
+        cm1: 'CM1 : Objets techniques, matériaux. CM2 : Machines, énergie, numérique.',
+        bo: 'BO n°31 du 30/07/2020 — Sciences Cycle 3'
+      }
+    ]
+  },
+  {
+    categorie: '🏃 EPS',
+    couleur: '#f97316',
+    matieres: [
+      {
+        nom: 'EPS — Activités',
+        p1: 'Jeux d\'orientation. Se repérer dans l\'espace. Course de durée.',
+        p2: 'Activités d\'opposition (jeux de lutte, accroche-décroche).',
+        p3: 'Activités de coopération. Parcours d\'orientation (lien carte P3).',
+        p4: 'Jeux d\'adresse et de coordination. Lancer / attraper.',
+        p5: 'Jeu de piste / raid (projet P5). Activités collectives (jeux traditionnels).',
+        cm1: 'CM1 : Course, orientation, lancers. CM2 : Lutte, coopération, jeux collectifs.',
+        bo: 'BO n°31 du 30/07/2020 — EPS Cycle 3'
+      }
+    ]
+  },
+  {
+    categorie: '🇬🇧 Anglais',
+    couleur: '#ec4899',
+    matieres: [
+      {
+        nom: 'Anglais — Communication',
+        p1: 'Se présenter (name, age). Les salutations. Les couleurs. Les nombres 1-20.',
+        p2: 'Les jours de la semaine. Les mois. Le temps qu\'il fait. La météo.',
+        p3: 'La nourriture. Les animaux. Les prépositions de lieu (in, on, under).',
+        p4: 'La famille. Les vêtements. Les parties du corps. Les verbes d\'action.',
+        p5: 'Les consignes de classe. Les loisirs. Les vacances. Révision et jeux de rôle.',
+        cm1: 'CM1 : Présentation, couleurs, nombres 1-20, jours, météo. CM2 : Nourriture, famille, vêtements, verbes.',
+        bo: 'BO n°31 du 30/07/2020 — Langues vivantes Cycle 3'
+      }
+    ]
+  },
+  {
+    categorie: '🎨 Arts & EMC',
+    couleur: '#14b8a6',
+    matieres: [
+      {
+        nom: 'Arts plastiques',
+        p1: 'Les chuchoteuses (décoration). Le dessin d\'observation. La carte de l\'îlot (1ère partie).',
+        p2: 'L\'illustration narrative. Les personnages en action. Couleurs chaudes/froides.',
+        p3: 'La carte en volume. La maquette du système solaire. Le croquis d\'observation.',
+        p4: 'La fresque collective à la gouache (tempête). Les mélanges de couleurs.',
+        p5: 'Les illustrations du livre. La couverture et la 4e de couverture. Le décor de théâtre.',
+        cm1: 'CM1 : Techniques graphiques, couleurs. CM2 : Fresque, illustration narrative, mise en page.',
+        bo: 'BO n°31 du 30/07/2020 — Arts Cycle 3'
+      },
+      {
+        nom: 'Éducation musicale',
+        p1: 'Chants de rentrée. Les bruits de la nature. Écoute : musiques du monde.',
+        p2: 'La voix : nuance, hauteur, rythme. Les instruments. Création sonore (tempête).',
+        p3: 'Les bruitages. Création d\'une bande-son pour un extrait du livre.',
+        p4: 'La musique et l\'émotion. Chants collectifs. Préparation théâtrale.',
+        p5: 'Chant et scène. Musique de la représentation. Bruitages du spectacle.',
+        cm1: 'CM1 : Chant, rythme, écoute. CM2 : Création sonore, bruitages, lien théâtre.',
+        bo: 'BO n°31 du 30/07/2020 — Arts Cycle 3'
+      },
+      {
+        nom: 'EMC',
+        p1: 'Les règles de vie de classe. Le respect du matériel. La coopération en groupe.',
+        p2: 'Le défi personnel (progression). L\'entraide. Accepter la critique.',
+        p3: 'La solidarité (projet Robinson). Les responsabilités dans le groupe.',
+        p4: 'Le débat argumenté. Le respect de l\'opinion de l\'autre. La posture citoyenne.',
+        p5: 'Les institutions (commune, école, collège). La liaison école-collège. Le vivre-ensemble.',
+        cm1: 'CM1 : Règles, respect, coopération. CM2 : Débat, solidarité, institutions.',
+        bo: 'BO n°31 du 30/07/2020 — EMC Cycle 3'
+      }
+    ]
+  }
+];
+
+function renderProgressions() {
+  const container = document.getElementById('progressionsContainer');
+  if (!container) return;
+  
+  let html = '';
+  PROGRESSIONS_DATA.forEach(cat => {
+    html += `<details style="margin:6px 0;">
+      <summary style="color:${cat.couleur};font-weight:700;">${cat.categorie} (${cat.matieres.length} sous-domaines)</summary>
+      <div class="body">`;
+    
+    cat.matieres.forEach(m => {
+      html += `<details style="margin:4px 0;border-left:3px solid ${cat.couleur};">
+        <summary style="font-size:0.9em;padding:8px 12px;"><strong>${m.nom}</strong> <span style="color:#64748b;font-weight:400;">— progressions CM1/CM2</span></summary>
+        <div class="body" style="font-size:0.85em;">
+          <div class="box blue"><strong>📋 CM1 vs CM2 :</strong> ${m.cm1}</div>
+          <table>
+            <tr><th style="width:40px;">P</th><th>Notions enseignées</th></tr>
+            <tr><td style="background:#fef2f2;"><strong>P1</strong></td><td>${m.p1}</td></tr>
+            <tr><td style="background:#eff6ff;"><strong>P2</strong></td><td>${m.p2}</td></tr>
+            <tr><td style="background:#f5f3ff;"><strong>P3</strong></td><td>${m.p3}</td></tr>
+            <tr><td style="background:#fffbeb;"><strong>P4</strong></td><td>${m.p4}</td></tr>
+            <tr><td style="background:#f0fdf4;"><strong>P5</strong></td><td>${m.p5}</td></tr>
+          </table>
+          <div style="font-size:0.8em;color:#94a3b8;margin-top:4px;">📜 ${m.bo}</div>
+        </div>
+      </details>`;
+    });
+    
+    html += `</div></details>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+// Init progressions on load
+document.addEventListener('DOMContentLoaded', () => {
+  renderProgressions();
+});
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('nav a:not([href^="#"])');
 const observer = new IntersectionObserver(entries => {
