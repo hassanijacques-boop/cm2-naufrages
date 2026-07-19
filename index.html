@@ -222,6 +222,8 @@
     <a href="#p4">P4</a>
     <a href="#p5">P5</a>
     <a href="#outils">Outils</a>
+    <a href="#fiches">Fiches</a>
+    <a href="#reglages">⚙️</a>
     <a href="#bo">BO</a>
   </span>
   <span class="nav-sep"></span>
@@ -837,6 +839,50 @@ function collapseAll() { document.querySelectorAll('details').forEach(d => d.ope
       </table>
     </div>
   </details>
+</section>
+
+<!-- ============================================================ -->
+<!-- FICHES DE PRÉPARATION -->
+<!-- ============================================================ -->
+<section id="fiches">
+  <div class="section-title">
+    📋 Fiches de préparation <a class="anchor" href="#fiches">#</a>
+    <span class="badge blue">50 fiches</span>
+    <span class="badge green">Pré-remplies</span>
+    <span class="badge orange">Générateur IA</span>
+  </div>
+
+  <div class="ee-tabs" id="fichesTabs">
+    <div class="ee-tab active" data-ftab="p1">🎤 P1</div>
+    <div class="ee-tab" data-ftab="p2">💧 P2</div>
+    <div class="ee-tab" data-ftab="p3">🗺️ P3</div>
+    <div class="ee-tab" data-ftab="p4">⚡ P4</div>
+    <div class="ee-tab" data-ftab="p5">🏆 P5</div>
+    <div class="ee-tab" data-ftab="gener">🤖 Générateur IA</div>
+  </div>
+
+  <div id="fichesPanels"></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- RÉGLAGES -->
+<!-- ============================================================ -->
+<section id="reglages">
+  <div class="section-title">
+    ⚙️ Réglages <a class="anchor" href="#reglages">#</a>
+  </div>
+
+  <div class="box blue" style="margin-bottom:10px;">
+    <strong>🔑 Clé API Groq</strong> — Nécessaire pour le générateur de fiches IA.<br>
+    Obtiens ta clé gratuitement sur <a href="https://console.groq.com/keys" target="_blank" style="color:#3b82f6;font-weight:600;">console.groq.com/keys</a>
+  </div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+    <input type="password" id="groqKeyInput" class="ee-input" style="flex:1;min-width:200px;font-family:monospace;" placeholder="gsk_...">
+    <button class="ee-btn primary" onclick="saveGroqKey()">💾 Enregistrer</button>
+    <button class="ee-btn small" style="background:#f1f5f9;" onclick="toggleGroqKey()">👁️</button>
+  </div>
+  <div id="groqStatus" style="font-size:0.82em;margin-top:6px;"></div>
 </section>
 
 <footer>
@@ -1523,6 +1569,340 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     title.appendChild(btns);
   }
+});
+
+// ===== FICHES DE PRÉPARATION — DONNÉES =====
+const FICHES_DATA = {
+  p1: { titre: '🎤 P1 — Fondations & Chuchoteuses', couleur: '#ef4444', seances: [
+    { n:1, titre:'Lancement théâtral', duree:'1h', domaine:'Français / Projet livre', obj:'Plonger les élèves dans l\'univers du projet', comps:['Comprendre un récit d\'aventure','S\'exprimer à l\'oral','Coopérer en groupe'], deroulement:[
+      {phase:'Rappel flash', temps:'5 min', modalite:'Collectif', detail:'Installation, présentation de la Jauge de Survie au tableau. "Qu\'est-ce qu\'une aventure ?"' },
+      {phase:'Modelage', temps:'15 min', modalite:'Collectif', detail:'Lecture théâtrale du prologue par l\'enseignant. Voix, gestes, intonation.' },
+      {phase:'Pratique guidée', temps:'10 min', modalite:'Collectif', detail:'Échanges libres : "Qu\'avez-vous ressenti ? Que va-t-il se passer ?"' },
+      {phase:'Pratique autonome', temps:'25 min', modalite:'Collectif dirigé', detail:'Création collective des 3 héros : fiche d\'identité au tableau (nom, âge, force, faiblesse).' },
+      {phase:'Bilan', temps:'5 min', modalite:'Collectif', detail:'"Demain, nous construirons notre boîte à mots."' }
+    ], diff:'Oral uniquement. Chacun propose une idée pour les héros.', adapt:'Participe à l\'oral. La fiche est pré-remplie.', materiel:'Jauge de Survie, tableau, fiches héros vierges' },
+    { n:2, titre:'Modelage & Mur de mots', duree:'1h', domaine:'Français / Lexique', obj:'Enrichir le lexique du récit d\'aventure', comps:['Utiliser un vocabulaire précis','Structurer un récit'], deroulement:[
+      {phase:'Rappel flash', temps:'5 min', modalite:'Collectif', detail:'"Qui sont nos héros ? Où en sont-ils ?"' },
+      {phase:'Modelage', temps:'15 min', modalite:'Collectif', detail:'Qu\'est-ce qu\'un récit d\'aventure ? Héros + quête + obstacles. Exemples.' },
+      {phase:'Pratique guidée', temps:'15 min', modalite:'Collectif', detail:'Construction collective du Mur de mots P1 (affiche au tableau).' },
+      {phase:'Pratique autonome', temps:'20 min', modalite:'Individuel', detail:'Exercices de vocabulaire : piocher 3 mots du Mur et écrire une phrase. 3 niveaux.' },
+      {phase:'Bilan', temps:'5 min', modalite:'Collectif', detail:'Lecture de 2-3 phrases produites.' }
+    ], diff:'N1 : mots imposés. N2 : 3 mots au choix. N3 : phrase complexe avec 2 mots.', adapt:'Fiche pré-imprimée du Mur de mots à coller.', materiel:'Affiche Mur de mots, fiches exercices 3 niveaux' },
+    { n:3, titre:'Projet Chuchoteuses', duree:'1h15', domaine:'Français / Arts / EMC', obj:'Fabriquer l\'outil de fluence et lancer le rituel', comps:['Lire avec fluidité','Respecter le matériel'], deroulement:[
+      {phase:'Modelage', temps:'10 min', modalite:'Collectif', detail:'"Pourquoi une chuchoteuse ?" Présentation du modèle, démonstration d\'utilisation.' },
+      {phase:'Pratique autonome 1', temps:'35 min', modalite:'Individuel', detail:'Assemblage : tube + 2 coudes PVC. Sécurisation par l\'enseignant (colle/chatterton).' },
+      {phase:'Pratique autonome 2', temps:'15 min', modalite:'Individuel', detail:'Personnalisation : autocollants, washi tape, feutres indélébiles.' },
+      {phase:'Mise en application', temps:'15 min', modalite:'Individuel', detail:'Premier essai : texte court distribué. Toute la classe chuchote dans sa chuchoteuse.' }
+    ], diff:'Assistance pour l\'emboîtement si nécessaire.', adapt:'Tube pré-découpé. Assistance possible.', materiel:'Tubes PVC 8-10cm, coudes 90°, chatterton, autocollants, washi tape, texte court' },
+    { n:4, titre:'Pratique guidée — Prologue', duree:'1h', domaine:'Français / Production d\'écrits', obj:'Écrire collectivement le prologue et amorcer le Chap.1', comps:['Rédiger un texte sous dictée à l\'adulte','Coopérer en groupe'], deroulement:[
+      {phase:'Rappel flash', temps:'5 min', modalite:'Collectif', detail:'Relecture des dernières phrases du prologue.' },
+      {phase:'Pratique guidée', temps:'15 min', modalite:'Collectif', detail:'Dictée à l\'adulte : la classe dicte la suite, l\'enseignant écrit au tableau.' },
+      {phase:'Organisation', temps:'10 min', modalite:'Collectif', detail:'Répartition en 5 groupes de 4-5 élèves. Distribution des rôles (gardien du temps, gardien des mots, scripteur).' },
+      {phase:'Pratique autonome', temps:'25 min', modalite:'Groupes', detail:'Chaque groupe commence le Chap.1 : la panique sur la plage quand la pirogue disparaît.' },
+      {phase:'Bilan', temps:'5 min', modalite:'Collectif', detail:'"Où en est votre groupe ? Qu\'est-ce qui est difficile ?"' }
+    ], diff:'N1 : phrases amorcées. N2 : consigne standard. N3 : ajouter un dialogue.', adapt:'Dicte ses idées à l\'enseignant ou à un tuteur.', materiel:'Prologue écrit au tableau, fiches consignes 3 niveaux' },
+    { n:5, titre:'Fluence + Chap.1', duree:'1h', domaine:'Français / Lecture + Production', obj:'Installer le rituel fluence et poursuivre l\'écriture', comps:['Lire avec fluidité','Rédiger un récit en groupe'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Texte court distribué. Lecture chuchoteuse. Chronométrage 1 min.' },
+      {phase:'Modelage', temps:'5 min', modalite:'Collectif', detail:'Rappel des consignes différenciées (N1/N2/N3 affichées au tableau).' },
+      {phase:'Pratique autonome', temps:'35 min', modalite:'Groupes', detail:'Écriture autonome du Chap.1. L\'enseignant circule, étaye les groupes N1.' },
+      {phase:'Bilan', temps:'10 min', modalite:'Collectif', detail:'Un groupe lit son début à voix haute (chuchoteuse). Retour positif.' }
+    ], diff:'Voir consignes N1/N2/N3 affichées.', adapt:'Rôle de gardien des mots.', materiel:'Texte fluence, consignes différenciées affichées' },
+    { n:6, titre:'Chap.1 suite', duree:'1h', domaine:'Français / Production d\'écrits', obj:'Finaliser le 1er jet du Chapitre 1', comps:['Rédiger un texte cohérent','Utiliser le lexique de l\'aventure'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Lecture chuchoteuse + chronométrage.' },
+      {phase:'Rappel', temps:'5 min', modalite:'Groupes', detail:'Relecture interne de ce qui a été écrit la veille.' },
+      {phase:'Pratique autonome', temps:'40 min', modalite:'Groupes', detail:'Focus sur la construction de l\'abri de fortune. Utilisation du Mur de mots.' },
+      {phase:'Bilan', temps:'5 min', modalite:'Groupes', detail:'Chaque groupe note où il s\'est arrêté.' }
+    ], diff:'Mêmes niveaux que séance 5.', adapt:'Illustrateur : dessine l\'abri.', materiel:'Cahier d\'écriture, Mur de mots' },
+    { n:7, titre:'Chap.1 fin + Mise en commun', duree:'1h', domaine:'Français / Production d\'écrits', obj:'Terminer le Chap.1 et harmoniser les textes', comps:['Rédiger','Écouter les productions des autres'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Lecture chuchoteuse.' },
+      {phase:'Pratique autonome', temps:'30 min', modalite:'Groupes', detail:'Fin de l\'écriture + relecture interne du groupe.' },
+      {phase:'Mise en commun', temps:'15 min', modalite:'Collectif', detail:'Chaque groupe lit son Chap.1 à la classe (un lecteur, les autres écoutent).' },
+      {phase:'Validation', temps:'5 min', modalite:'Collectif', detail:'La classe valide la version qui servira de base.' }
+    ], diff:'N1 : lit une phrase. N2 : lit un paragraphe. N3 : lit l\'intégralité.', adapt:'Lecture à voix haute — son point fort.', materiel:'Tous les Chap.1 des groupes' },
+    { n:8, titre:'Relecture & Correction', duree:'1h', domaine:'Français / Étude de la langue', obj:'Améliorer le texte avec la grille d\'autocorrection', comps:['Corriger son texte','Utiliser des outils de relecture'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Fluence chuchoteuse.' },
+      {phase:'Modelage', temps:'10 min', modalite:'Collectif', detail:'Présentation de la grille de relecture (7 critères). Exemple au tableau.' },
+      {phase:'Pratique autonome', temps:'30 min', modalite:'Groupes', detail:'Les groupes relisent et corrigent leur texte avec la grille. Cochez au fur et à mesure.' },
+      {phase:'Réécriture', temps:'10 min', modalite:'Groupes', detail:'Réécriture des passages faibles identifiés.' }
+    ], diff:'N1 : 3 critères prioritaires. N2 : 5 critères. N3 : 7 critères.', adapt:'Grille visuelle (symboles/couleurs). Pas de commentaires écrits longs.', materiel:'Grille de relecture imprimée (1 par groupe)' },
+    { n:9, titre:'Mise au propre + Illustration', duree:'1h', domaine:'Français / Arts', obj:'Finaliser le Chap.1 et lancer la carte de l\'îlot', comps:['Soigner la présentation','Illustrer un texte'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Fluence chuchoteuse.' },
+      {phase:'Pratique autonome 1', temps:'30 min', modalite:'Groupes', detail:'Recopie soignée du texte corrigé sur feuille propre.' },
+      {phase:'Pratique autonome 2', temps:'15 min', modalite:'Individuel', detail:'1ère illustration : les élèves dessinent la plage du naufrage.' },
+      {phase:'Collectif', temps:'5 min', modalite:'Collectif', detail:'Début de la carte collective : ajouter "La Plage du Naufrage".' }
+    ], diff:'N1 : texte court + coloriage. N3 : illustration détaillée + légende.', adapt:'Copie réduite. Rôle d\'illustrateur valorisé.', materiel:'Feuilles blanches A4, crayons de couleur, feutres' },
+    { n:10, titre:'Clôture P1', duree:'1h', domaine:'Français / Bilan', obj:'Célébrer la fin du 1er cycle et faire le bilan', comps:['Lire à voix haute','Évaluer sa progression'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Dernier test du bloc (chronométrage + score).' },
+      {phase:'Lecture', temps:'20 min', modalite:'Collectif', detail:'Lecture à voix haute du Chap.1 : un élève par groupe lit avec la chuchoteuse.' },
+      {phase:'Bilan collectif', temps:'10 min', modalite:'Collectif', detail:'Mise à jour de la Jauge de Survie et de la Carte de l\'Îlot.' },
+      {phase:'Métacognition', temps:'10 min', modalite:'Collectif', detail:'"Qu\'avons-nous appris ? Qu\'est-ce qui était difficile ?"' },
+      {phase:'Annonce', temps:'10 min', modalite:'Collectif', detail:'"Dans le prochain bloc, nos héros vont chercher de l\'eau…"' }
+    ], diff:'Chacun lit selon ses capacités.', adapt:'Lecture à voix haute — moment de briller.', materiel:'Jauge de Survie, Carte de l\'Îlot' }
+  ]},
+  p2: { titre: '💧 P2 — L\'Eau & Défi Lecture', couleur: '#3b82f6', seances: [
+    { n:1, titre:'Défi Lecture — Lancement', duree:'1h', domaine:'Français / Lecture', obj:'Lancer le challenge de lecture', comps:['Lire avec fluidité','Mesurer sa progression'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Lecture chuchoteuse.' },
+      {phase:'Modelage', temps:'15 min', modalite:'Collectif', detail:'Présentation du Défi Lecture : tableau de suivi individuel, principe du score MCLM.' },
+      {phase:'Test initial', temps:'15 min', modalite:'Individuel', detail:'Test 1 min chronométré. Les élèves comptent leurs mots lus.' },
+      {phase:'Bilan', temps:'15 min', modalite:'Individuel', detail:'Chaque élève note son score initial sur sa fiche de suivi.' }
+    ], diff:'Texte adapté N1 (plus court). N3 : texte plus long.', adapt:'Score noté par un pair. Questions de compréhension à l\'oral.', materiel:'Texte Défi Lecture, chronomètre, fiches de suivi individuelles' },
+    { n:2, titre:'Modelage — Connecteurs temporels', duree:'1h', domaine:'Français / Grammaire', obj:'Utiliser les connecteurs pour rythmer le récit', comps:['Utiliser des connecteurs temporels','Distinguer passé simple et imparfait'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Lecture chuchoteuse.' },
+      {phase:'Modelage', temps:'15 min', modalite:'Collectif', detail:'"Soudain, au même instant, quelques minutes plus tard…" — utilisation des connecteurs.' },
+      {phase:'Sciences intégrées', temps:'10 min', modalite:'Collectif', detail:'Pourquoi ne peut-on pas boire l\'eau de mer ? (osmose, sel).' },
+      {phase:'Pratique autonome', temps:'20 min', modalite:'Individuel', detail:'Exercices : placer les connecteurs dans des phrases.' },
+      {phase:'Bilan', temps:'5 min', modalite:'Collectif', detail:'Correction collective des exercices.' }
+    ], diff:'N1 : connecteurs imposés. N3 : créer des phrases avec 3 connecteurs.', adapt:'Étiquettes connecteurs pré-découpées à placer.', materiel:'Affiche connecteurs temporels, fiches exercices' },
+    { n:3, titre:'Pratique guidée — Mur de mots P2', duree:'1h', domaine:'Français / Lexique', obj:'Enrichir le lexique de l\'exploration et de la soif', comps:['Enrichir son vocabulaire','Décrire un environnement'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Lecture chuchoteuse.' },
+      {phase:'Pratique guidée', temps:'15 min', modalite:'Collectif', detail:'Construction du Mur de mots P2 : soif, exploration, animaux, végétation.' },
+      {phase:'Modelage', temps:'15 min', modalite:'Collectif', detail:'Modelage d\'une phrase de description d\'exploration avec les mots du Mur.' },
+      {phase:'Pratique autonome', temps:'15 min', modalite:'Individuel', detail:'Rédiger 3 phrases avec les mots du Mur.' },
+      {phase:'Bilan', temps:'5 min', modalite:'Collectif', detail:'Lecture de 3-4 phrases.' }
+    ], diff:'N1 : mots imposés. N2 : 3 phrases. N3 : 3 phrases + adjectifs.', adapt:'Fiche pré-imprimée du Mur de mots.', materiel:'Affiche Mur de mots P2, fiches exercices 3 niveaux' },
+    { n:4, titre:'Chap.2 1er jet', duree:'1h', domaine:'Français / Production d\'écrits', obj:'Rédiger la recherche d\'eau douce', comps:['Rédiger un texte narratif','Utiliser le passé simple/imparfait'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Lecture chuchoteuse.' },
+      {phase:'Consignes', temps:'5 min', modalite:'Collectif', detail:'Rappel des consignes différenciées affichées.' },
+      {phase:'Pratique autonome', temps:'35 min', modalite:'Groupes', detail:'Groupes 1&2 : exploration de l\'îlot. Groupes 3-5 : découverte de la source.' },
+      {phase:'Bilan', temps:'10 min', modalite:'Collectif', detail:'Lecture d\'un début par chaque groupe.' }
+    ], diff:'N1 : 5-7 phrases, mots imposés. N2 : 2 paragraphes. N3 : 3 paragraphes + dialogue.', adapt:'Dicte ses idées. Rôle d\'illustrateur.', materiel:'Consignes différenciées, Mur de mots P2' },
+    { n:5, titre:'Chap.2 suite + Défi entraînement', duree:'1h', domaine:'Français', obj:'Poursuivre l\'écriture et s\'entraîner au défi lecture', comps:['Rédiger','Lire avec fluidité'], deroulement:[
+      {phase:'Rituel fluence + Défi', temps:'10 min', modalite:'Individuel', detail:'Fluence + entraînement sur le texte du Défi Lecture.' },
+      {phase:'Pratique autonome', temps:'30 min', modalite:'Groupes', detail:'Suite de l\'écriture du Chap.2.' },
+      {phase:'Pratique guidée', temps:'10 min', modalite:'Individuel', detail:'Lecture répétée du texte du Défi (3 fois le même texte).' },
+      {phase:'Bilan', temps:'10 min', modalite:'Collectif', detail:'Où en êtes-vous ?' }
+    ], diff:'Idem séance 4.', adapt:'Rôle de scripteur ou gardien des mots.', materiel:'Cahier d\'écriture, texte Défi Lecture' },
+    { n:6, titre:'Chap.3 1er jet — Rencontre animale', duree:'1h', domaine:'Français', obj:'Rédiger la rencontre avec un animal sauvage', comps:['Utiliser le vocabulaire des animaux','Rédiger un texte narratif'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Lecture chuchoteuse.' },
+      {phase:'Consignes', temps:'5 min', modalite:'Collectif', detail:'Rappel des consignes différenciées.' },
+      {phase:'Pratique autonome', temps:'35 min', modalite:'Groupes', detail:'Écriture : la rencontre avec un animal sauvage (gecko, varan, oiseau rare).' },
+      {phase:'Bilan', temps:'10 min', modalite:'Collectif', detail:'Lecture d\'un passage par groupe.' }
+    ], diff:'N1 : décrire l\'animal (5 phrases). N2 : rencontre + peur. N3 : dilemme (aider ou fuir ?).', adapt:'Étiquettes mots animaux à placer.', materiel:'Mur de mots P2, images d\'animaux' },
+    { n:7, titre:'Relecture Chap.2&3', duree:'1h', domaine:'Français / Étude de la langue', obj:'Corriger les chapitres avec la grille', comps:['Corriger son texte','Utiliser une grille de relecture'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Fluence.' },
+      {phase:'Rappel', temps:'10 min', modalite:'Collectif', detail:'Rappel des critères de relecture (connecteurs, accords, passé simple).' },
+      {phase:'Pratique autonome', temps:'30 min', modalite:'Groupes', detail:'Relecture guidée avec grille.' },
+      {phase:'Réécriture', temps:'10 min', modalite:'Groupes', detail:'Correction des erreurs identifiées.' }
+    ], diff:'Grille allégée pour N1.', adapt:'Grille visuelle avec symboles.', materiel:'Grille de relecture' },
+    { n:8, titre:'Défi Lecture — Finale', duree:'1h', domaine:'Français / Lecture', obj:'Mesurer la progression individuelle', comps:['Lire avec fluidité','Analyser sa progression'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Dernier échauffement.' },
+      {phase:'Test final', temps:'15 min', modalite:'Individuel', detail:'Test chronométré sur le même texte que S1 (mêmes conditions).' },
+      {phase:'Analyse', temps:'15 min', modalite:'Individuel', detail:'Chaque élève compare score initial vs final. Courbe de progression.' },
+      {phase:'Lecture expressive', temps:'15 min', modalite:'Collectif', detail:'3 volontaires lisent le texte avec émotion (ton, ponctuation).' }
+    ], diff:'Même texte pour tous — la performance est individuelle.', adapt:'Pair lit le score à l\'élève. Oral uniquement.', materiel:'Texte Défi Lecture, chronomètre, feuilles de suivi' },
+    { n:9, titre:'Mise au propre Chap.2&3', duree:'1h', domaine:'Français / Arts', obj:'Finaliser les chapitres', comps:['Soigner la présentation','Illustrer'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Fluence.' },
+      {phase:'Pratique autonome', temps:'35 min', modalite:'Groupes', detail:'Recopie soignée + illustration (la source, l\'animal).' },
+      {phase:'Collectif', temps:'15 min', modalite:'Collectif', detail:'Ajout des nouveaux éléments à la Carte de l\'Îlot.' }
+    ], diff:'Quantité de texte adaptée.', adapt:'Illustrateur principal.', materiel:'Feuilles blanches, crayons de couleur' },
+    { n:10, titre:'Clôture P2', duree:'1h', domaine:'Français / Bilan', obj:'Bilan de la période', comps:['Lire avec expressivité','Évaluer sa progression'], deroulement:[
+      {phase:'Rituel fluence', temps:'10 min', modalite:'Individuel', detail:'Fluence.' },
+      {phase:'Lecture', temps:'15 min', modalite:'Collectif', detail:'Lecture expressive des meilleurs extraits (élèves volontaires).' },
+      {phase:'Bilan', temps:'10 min', modalite:'Collectif', detail:'Mise à jour Jauge de Survie (l\'eau a été trouvée !).' },
+      {phase:'Carte', temps:'10 min', modalite:'Collectif', detail:'Mise à jour de la Carte de l\'Îlot.' },
+      {phase:'Annonce', temps:'10 min', modalite:'Collectif', detail:'"La carte n\'est pas finie. Au prochain bloc, on explore la grotte !"' }
+    ], diff:'Chacun lit ce qu\'il peut.', adapt:'Lecture à voix haute — valorisé.', materiel:'Jauge de Survie, Carte de l\'Îlot' }
+  ]},
+  p3: { titre: '🗺️ P3 — Cartographie & Survie', couleur: '#8b5cf6', seances: 'Voir le déroulement complet dans la section P3 ci-dessus. Les 10 séances détaillées sont pré-remplies avec le même format (Modelage → Cartographie → Chap.4-5 → Relecture → Lecture expressive → Clôture).' },
+  p4: { titre: '⚡ P4 — Tempête & Éloquence', couleur: '#ef4444', seances: 'Voir le déroulement complet dans la section P4 ci-dessus (Défi Éloquence → Pic dramatique → Chap.6-7 → Relecture croisée → Fresque → Clôture).' },
+  p5: { titre: '🏆 P5 — Théâtre & Livre', couleur: '#22c55e', seances: 'Voir le déroulement complet dans la section P5 ci-dessus (Modelage fin → Épilogue → Théâtre → Révision → Représentation → Jeu de piste).' }
+};
+
+// ===== FICHES DE PRÉPARATION — AFFICHAGE =====
+function initFiches() {
+  document.querySelectorAll('#fichesTabs .ee-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#fichesTabs .ee-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderFichesPanel(tab.dataset.ftab);
+    });
+  });
+  renderFichesPanel('p1');
+  renderGroqKey();
+}
+
+function renderFichesPanel(tab) {
+  const container = document.getElementById('fichesPanels');
+  if (tab === 'gener') { renderGenerator(container); return; }
+  
+  const data = FICHES_DATA[tab];
+  if (!data) return;
+  
+  let html = `<div style="margin-bottom:10px;font-weight:700;font-size:1em;color:${data.couleur};">${data.titre}</div>`;
+  
+  if (typeof data.seances === 'string') {
+    html += `<div class="box blue">${data.seances}</div>`;
+    container.innerHTML = html;
+    return;
+  }
+  
+  data.seances.forEach(s => {
+    html += `<details style="margin:6px 0;">
+      <summary>Séance ${s.n} — ${s.titre} <span style="color:#64748b;font-weight:400;font-size:0.85em;">${s.duree} • ${s.domaine}</span></summary>
+      <div class="body">
+        <div style="margin-bottom:8px;"><strong>🎯 Objectif :</strong> ${s.obj}</div>
+        <div style="margin-bottom:8px;"><strong>📚 Compétences :</strong><br>${s.comps.map(c => '• ' + c).join('<br>')}</div>
+        <table style="font-size:0.85em;">
+          <tr><th style="width:110px;">Phase</th><th style="width:50px;">Durée</th><th style="width:80px;">Modalité</th><th>Déroulement</th></tr>
+          ${s.deroulement.map(p => `<tr><td><strong>${p.phase}</strong></td><td>${p.temps}</td><td>${p.modalite}</td><td>${p.detail}</td></tr>`).join('')}
+        </table>
+        <div class="box yellow" style="margin-top:8px;"><strong>🔴🟡🟢 Différenciation :</strong> ${s.diff}</div>
+        <div class="box red"><strong>♿ Adaptation :</strong> ${s.adapt}</div>
+        <div class="box blue"><strong>🧰 Matériel :</strong> ${s.materiel}</div>
+      </div>
+    </details>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+// ===== GÉNÉRATEUR IA =====
+function renderGenerator(container) {
+  const key = localStorage.getItem('groq_api_key');
+  container.innerHTML = `
+    <div class="box green" style="margin-bottom:12px;">
+      <strong>🤖 Générateur de fiche de préparation assisté par IA</strong><br>
+      Remplis les champs ci-dessous et clique sur "Générer" pour obtenir une fiche complète et structurée.
+      ${!key ? '<br><span style="color:#dc2626;">⚠️ Configure d\'abord ta clé API Groq dans <a href="#reglages" style="color:#3b82f6;">⚙️ Réglages</a></span>' : '✅ Clé API configurée.'}
+    </div>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px;">
+      <div><label style="font-size:0.75em;font-weight:600;">Période</label><select id="genPeriode" class="ee-input"><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option></select></div>
+      <div><label style="font-size:0.75em;font-weight:600;">Niveau</label><select id="genNiveau" class="ee-input"><option>CM1/CM2</option><option>CM1</option><option>CM2</option></select></div>
+      <div><label style="font-size:0.75em;font-weight:600;">Domaine</label><select id="genDomaine" class="ee-input"><option>Français</option><option>Mathématiques</option><option>Lecture</option><option>Production d\'écrits</option><option>Étude de la langue</option><option>EMC</option><option>Arts</option></select></div>
+    </div>
+    
+    <div style="margin-bottom:8px;">
+      <label style="font-size:0.75em;font-weight:600;">Titre de la séance</label>
+      <input id="genTitre" class="ee-input" placeholder="Ex: Découverte de la source d'eau douce" value="">
+    </div>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:8px;">
+      <div><label style="font-size:0.75em;font-weight:600;">Durée</label><select id="genDuree" class="ee-input"><option>45 min</option><option selected>1h</option><option>1h15</option><option>1h30</option><option>2h</option></select></div>
+      <div><label style="font-size:0.75em;font-weight:600;">Séance n°</label><input id="genNumero" class="ee-input" type="number" min="1" max="10" value="1"></div>
+      <div><label style="font-size:0.75em;font-weight:600;">En lien avec la séance n°</label><input id="genLien" class="ee-input" type="number" min="0" max="10" placeholder="0 = première" value="0"></div>
+    </div>
+    
+    <div style="margin-bottom:8px;">
+      <label style="font-size:0.75em;font-weight:600;">Objectif principal</label>
+      <input id="genObjectif" class="ee-input" placeholder="Ex: Rédiger la découverte de la source en utilisant les connecteurs temporels" value="">
+    </div>
+    
+    <div style="margin-bottom:8px;">
+      <label style="font-size:0.75em;font-weight:600;">Éléments supplémentaires (optionnel)</label>
+      <textarea id="genExtra" class="ee-textarea" style="min-height:60px;" placeholder="Ex: Mur de mots à utiliser, lien avec la séance précédente, difficulté particulière..."></textarea>
+    </div>
+    
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <button class="ee-btn primary" onclick="genererFicheIA()" ${!key ? 'disabled style="opacity:0.5;"' : ''}>🤖 Générer la fiche</button>
+      <span id="genStatus" style="font-size:0.85em;color:#64748b;"></span>
+    </div>
+    
+    <div id="genResult" style="margin-top:12px;"></div>
+  `;
+}
+
+async function genererFicheIA() {
+  const status = document.getElementById('genStatus');
+  const result = document.getElementById('genResult');
+  const key = localStorage.getItem('groq_api_key');
+  
+  if (!key) { status.innerHTML = '⚠️ Configure d\'abord la clé API dans <a href="#reglages">Réglages</a>.'; return; }
+  
+  const periode = document.getElementById('genPeriode').value;
+  const niveau = document.getElementById('genNiveau').value;
+  const domaine = document.getElementById('genDomaine').value;
+  const titre = document.getElementById('genTitre').value.trim();
+  const duree = document.getElementById('genDuree').value;
+  const numero = document.getElementById('genNumero').value;
+  const lien = document.getElementById('genLien').value;
+  const objectif = document.getElementById('genObjectif').value.trim();
+  const extra = document.getElementById('genExtra').value.trim();
+  
+  if (!titre || !objectif) { status.innerHTML = '❌ Remplis au moins le titre et l\'objectif.'; return; }
+  
+  status.innerHTML = '⏳ Génération en cours (20-30 secondes)...';
+  result.innerHTML = '';
+  
+  const prompt = `Génère une fiche de préparation complète pour une séance d'enseignement au format suivant :
+
+NIVEAU : ${niveau}
+PÉRIODE : ${periode}
+SÉANCE N° : ${numero}${lien > 0 ? ` (fait suite à la séance ${lien})` : ' (première séance)'}
+TITRE : ${titre}
+DOMAINE : ${domaine}
+DURÉE : ${duree}
+OBJECTIF : ${objectif}
+${extra ? `CONTEXTE SUPPLÉMENTAIRE : ${extra}` : ''}
+
+La fiche doit suivre la structure explicite en 5 phases (Rappel flash → Modelage → Pratique guidée → Pratique autonome différenciée → Bilan).
+Pour chaque phase : décrire précisément le déroulement, la modalité de travail, la durée.
+La différenciation doit être déclinée en 3 niveaux (N1 Guidé / N2 Standard / N3 Défi).
+Prévoir une adaptation pour un élève à lenteur graphique (préhension altérée, fatigue à l'écriture).
+Lister le matériel nécessaire.
+Ajouter des liens avec la séance précédente ${lien > 0 ? `(séance ${lien})` : ''}.
+
+Format de la réponse : texte structuré en sections claires, sans jargon inutile, directement utilisable par un enseignant.`;
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: 'Tu es un enseignant expert en pédagogie explicite. Tu génères des fiches de préparation de séance complètes, structurées et directement utilisables pour une classe de CM1/CM2 en REP+.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 2048
+      })
+    });
+    
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(err.includes('401') ? 'Clé API invalide' : 'Erreur ' + response.status);
+    }
+    
+    const data = await response.json();
+    const texte = data.choices[0].message.content;
+    
+    result.innerHTML = `<div class="box green" style="margin-bottom:8px;"><strong>✅ Fiche générée</strong> — Tu peux l'imprimer ou la copier.</div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;white-space:pre-wrap;font-size:0.9em;line-height:1.7;max-height:600px;overflow-y:auto;">${texte.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+      <button class="ee-btn small" style="margin-top:8px;" onclick="navigator.clipboard.writeText(\`${texte.replace(/`/g,'\\`')}\`);toast('📋 Copié dans le presse-papier')">📋 Copier</button>`;
+    
+    status.innerHTML = '✅ Terminé !';
+  } catch(e) {
+    status.innerHTML = '❌ Erreur : ' + e.message;
+    result.innerHTML = `<div class="box red">❌ Échec de la génération : ${e.message}.<br>Vérifie ta clé API dans <a href="#reglages">⚙️ Réglages</a>.</div>`;
+  }
+}
+
+// ===== RÉGLAGES =====
+function saveGroqKey() {
+  const key = document.getElementById('groqKeyInput').value.trim();
+  if (!key || !key.startsWith('gsk_')) { toast('❌ La clé doit commencer par gsk_', 'warn'); return; }
+  localStorage.setItem('groq_api_key', key);
+  document.getElementById('groqStatus').innerHTML = '✅ Clé enregistrée localement.';
+  toast('✅ Clé API enregistrée');
+}
+
+function toggleGroqKey() {
+  const input = document.getElementById('groqKeyInput');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function renderGroqKey() {
+  const key = localStorage.getItem('groq_api_key');
+  if (key) {
+    document.getElementById('groqKeyInput').value = key;
+    document.getElementById('groqStatus').innerHTML = '✅ Clé configurée (' + key.slice(0,10) + '…)';
+  }
+}
+
+// Init fiches tabs on load
+document.addEventListener('DOMContentLoaded', () => {
+  initFiches();
 });
 
 // ===== NAVIGATION ACTIVE =====
