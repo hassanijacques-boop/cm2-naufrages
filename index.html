@@ -1774,6 +1774,54 @@ function renderFichesPanel(tab) {
 }
 
 // ===== GÉNÉRATEUR IA =====
+const GEN_OBJECTIFS = {
+  'Français': ['Lire et comprendre un texte narratif','Identifier les nature et fonction des mots','Analyser une phrase simple/complexe','Rédiger un paragraphe cohérent','Utiliser le vocabulaire de l\'aventure','Identifier le schéma narratif','Comprendre l\'implicite d\'un texte','Employer le présent de l\'indicatif'],
+  'Lecture / Fluence': ['Lire à voix haute avec fluidité','Améliorer sa vitesse de lecture','Lire avec expressivité','Comprendre un texte lu en autonomie','Identifier informations explicites et implicites','Déchiffrer un texte inconnu','Lire un texte documentaire','Automatiser le décodage'],
+  'Production d\'écrits': ['Rédiger un texte narratif de 15-20 lignes','Utiliser les connecteurs temporels','Employer le passé simple et l\'imparfait','Écrire un dialogue','Décrire un lieu ou un personnage','Structurer un récit','Réviser et améliorer son texte','Écrire un texte argumentatif'],
+  'Étude de la langue': ['Identifier et utiliser les connecteurs','Accorder le participe passé','Distinguer passé simple et imparfait','Analyser les fonctions dans la phrase','Conjuguer aux temps du récit','Reconnaître les classes de mots','Orthographier les mots invariables','Employer les homophones grammaticaux'],
+  'Mathématiques': ['Résoudre un problème à plusieurs étapes','Maîtriser les 4 opérations posées','Utiliser les fractions et décimaux','Calculer des périmètres et aires','Se repérer sur un plan ou une carte','Lire et interpréter des données','Appliquer la proportionnalité','Tracer des figures géométriques'],
+  'Histoire': ['Se repérer sur une frise chronologique','Comprendre une période historique','Analyser un document historique','Identifier les causes et conséquences','Mémoriser des repères historiques','Distinguer sources primaires/secondaires','Comparer des modes de vie','Comprendre les Grandes Découvertes'],
+  'Géographie': ['Se repérer sur un planisphère','Identifier les continents et océans','Lire et construire une carte','Utiliser l\'échelle et les points cardinaux','Comprendre les climats et paysages','Situer la France et Mayotte','Décrire un paysage','Comprendre les échanges mondiaux'],
+  'Sciences': ['Identifier les besoins des êtres vivants','Comprendre les états de l\'eau','Observer le système solaire','Schématiser une expérience','Comprendre les fonctions du corps humain','Distinguer matière vivante/non vivante','Suivre une démarche d\'investigation','Recycler et trier les déchets'],
+  'Technologie': ['Comprendre le fonctionnement d\'un objet technique','Identifier les matériaux et leurs propriétés','Réaliser un croquis technique','Utiliser un outil numérique','Suivre un protocole de construction','Comprendre les énergies renouvelables','Réaliser une maquette','Programmer un déplacement simple'],
+  'EPS': ['Coopérer dans un jeu collectif','Se repérer dans l\'espace','Courir à allure régulière','Développer sa coordination motrice','Respecter les règles d\'un jeu','Lancer et attraper avec précision','S\'opposer dans un jeu de lutte','Participer à un parcours d\'orientation'],
+  'Anglais': ['Se présenter en anglais (nom, âge)','Comprendre des consignes simples','Nommer les couleurs et les nombres','Dire le temps qu\'il fait','Parler de ses goûts alimentaires','Décrire sa famille','Utiliser le vocabulaire des vêtements','Jouer une saynète en anglais'],
+  'Arts plastiques': ['Découvrir les couleurs chaudes/froides','Réaliser une production collective','Illustrer un texte narratif','Utiliser la gouache et les pinceaux','Créer une composition plastique','S\'exprimer par le dessin','Observer et reproduire','Mettre en page un livre'],
+  'Éducation musicale': ['Chanter en groupe','Reconnaître des instruments','Créer des bruitages','Adapter sa voix (nuance, hauteur)','Écouter et analyser une œuvre','Marquer le rythme','Improviser une séquence sonore','Respecter les consignes de chant collectif'],
+  'EMC': ['Respecter les règles de vie collective','Participer à un débat argumenté','Comprendre le principe de laïcité','Distinguer droits et devoirs','S\'engager dans un projet commun','Accepter les différences','Comprendre les institutions','Développer son esprit critique']
+};
+
+function updateGenObjectifs() {
+  const domaine = document.getElementById('genDomaine').value;
+  const select = document.getElementById('genObjectif');
+  const custom = document.getElementById('genObjectifCustom');
+  const obj = GEN_OBJECTIFS[domaine] || [];
+  select.innerHTML = '<option value="">Choisis un objectif…</option>';
+  obj.forEach(o => { select.innerHTML += `<option value="${o}">${o}</option>`; });
+  select.innerHTML += '<option value="__custom__">✏️ Objectif personnalisé…</option>';
+  custom.value = '';
+  custom.style.display = 'none';
+  select.style.display = 'block';
+}
+
+function toggleObjectifCustom() {
+  const select = document.getElementById('genObjectif');
+  const custom = document.getElementById('genObjectifCustom');
+  if (select.value === '__custom__') {
+    custom.style.display = 'block';
+    custom.focus();
+  } else {
+    custom.style.display = 'none';
+  }
+}
+
+function getObjectifValue() {
+  const select = document.getElementById('genObjectif');
+  const custom = document.getElementById('genObjectifCustom');
+  if (select.value === '__custom__') return custom.value.trim();
+  return select.value;
+}
+
 function renderGenerator(container) {
   const key = localStorage.getItem('groq_api_key');
   container.innerHTML = `
@@ -1786,7 +1834,7 @@ function renderGenerator(container) {
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px;">
       <div><label style="font-size:0.75em;font-weight:600;">Période</label><select id="genPeriode" class="ee-input"><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option></select></div>
       <div><label style="font-size:0.75em;font-weight:600;">Niveau</label><select id="genNiveau" class="ee-input"><option>CM1/CM2</option><option>CM1</option><option>CM2</option></select></div>
-      <div><label style="font-size:0.75em;font-weight:600;">Domaine</label><select id="genDomaine" class="ee-input"><option>Français</option><option>Lecture / Fluence</option><option>Production d'écrits</option><option>Étude de la langue</option><option>Mathématiques</option><option>Histoire</option><option>Géographie</option><option>Sciences</option><option>Technologie</option><option>EPS</option><option>Anglais</option><option>Arts plastiques</option><option>Éducation musicale</option><option>EMC</option></select></div>
+      <div><label style="font-size:0.75em;font-weight:600;">Domaine</label><select id="genDomaine" class="ee-input" onchange="updateGenObjectifs()"><option>Français</option><option>Lecture / Fluence</option><option>Production d'écrits</option><option>Étude de la langue</option><option>Mathématiques</option><option>Histoire</option><option>Géographie</option><option>Sciences</option><option>Technologie</option><option>EPS</option><option>Anglais</option><option>Arts plastiques</option><option>Éducation musicale</option><option>EMC</option></select></div>
     </div>
     
     <div style="margin-bottom:8px;">
@@ -1802,7 +1850,10 @@ function renderGenerator(container) {
     
     <div style="margin-bottom:8px;">
       <label style="font-size:0.75em;font-weight:600;">Objectif principal</label>
-      <input id="genObjectif" class="ee-input" placeholder="Ex: Rédiger la découverte de la source en utilisant les connecteurs temporels" value="">
+      <select id="genObjectif" class="ee-input" onchange="toggleObjectifCustom()">
+        <option value="">Choisis un objectif selon le domaine…</option>
+      </select>
+      <input id="genObjectifCustom" class="ee-input" style="margin-top:4px;display:none;" placeholder="Ou saisis un objectif personnalisé…">
     </div>
     
     <div style="margin-bottom:8px;">
@@ -1828,6 +1879,8 @@ function renderGenerator(container) {
     btn.disabled = false;
     btn.style.opacity = '1';
   }
+  // Initialiser les objectifs selon le domaine par défaut
+  updateGenObjectifs();
 }
 
 async function genererFicheIA() {
@@ -1844,7 +1897,7 @@ async function genererFicheIA() {
   const duree = document.getElementById('genDuree').value;
   const numero = document.getElementById('genNumero').value;
   const lien = document.getElementById('genLien').value;
-  const objectif = document.getElementById('genObjectif').value.trim();
+  const objectif = getObjectifValue();
   const extra = document.getElementById('genExtra').value.trim();
   
   if (!titre || !objectif) { status.innerHTML = '❌ Remplis au moins le titre et l\'objectif.'; return; }
