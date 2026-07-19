@@ -821,9 +821,24 @@ c.innerHTML=`<textarea id="nt" class="in" style="min-height:150px">${n}</textare
 }
 // Liste d'élèves
 function renderEleves(c){
-c.innerHTML='<div class="box b">👥 <strong>Liste des élèves</strong></div><p style="font-size:.9em;color:#64748b">Test : écris dans le champ ci-dessous :</p><input class="in" style="font-size:1em;padding:10px" placeholder="Écris ici..."><p style="font-size:.8em;color:#94a3b8;margin-top:6px" id="elTest"></p>';
-c.querySelector('input').addEventListener('input',function(){
-document.getElementById('elTest').textContent='Tu as écrit : '+this.value;
+const d=JSON.parse(localStorage.getItem('eleves')||'{}');
+let h='<div class="box b">👥 <strong>Liste des élèves</strong> — 23 places.</div><div style="max-height:500px;overflow-y:auto">';
+for(let i=0;i<23;i++){
+const nom=d[i]||'';
+h+=`<div style="display:flex;gap:4px;margin:3px 0;align-items:center">
+<span style="font-size:.75em;color:#94a3b8;min-width:18px">${i+1}.</span>
+<input class="in" style="flex:1;padding:4px 8px" value="${nom}" placeholder="Prénom ${i+1}...">
+</div>`;
+}
+h+='</div>';
+c.innerHTML=h;
+// Attacher les événements après affichage
+c.querySelectorAll('input[placeholder^="Prénom"]').forEach((inp,i)=>{
+inp.addEventListener('input',function(){
+const data=JSON.parse(localStorage.getItem('eleves')||'{}');
+data[i]=this.value;
+localStorage.setItem('eleves',JSON.stringify(data));
+});
 });
 }
 // Grille LSU
