@@ -208,6 +208,9 @@
 <!-- Back to top -->
 <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
 
+<!-- JS test -->
+<script>document.write('<div id="jstest" style="display:none;">JS OK</div>');</script>
+
 <!-- ===== NAV ===== -->
 <nav>
   <span class="logo">🏝️</span>
@@ -861,9 +864,7 @@ function collapseAll() { document.querySelectorAll('details').forEach(d => d.ope
 
   <div id="progressionsContainer">
     <div class="box yellow" style="margin:12px 0;">
-      <strong>⏳ Chargement des progressions…</strong><br>
-      Si ce message reste affiché, le JavaScript ne s'est pas exécuté.
-      Essaie de rafraîchir la page (F5 ou Ctrl+F5).
+      <strong>⏳ Chargement des progressions…</strong>
     </div>
   </div>
 </section>
@@ -2353,6 +2354,17 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.3, rootMargin: '-70px 0px 0px 0px' });
 sections.forEach(s => observer.observe(s));
+
+// Render progressions inline
+try { renderProgressions(); } catch(e) {
+  const c = document.getElementById('progressionsContainer');
+  if (c) c.innerHTML = '<div class="box red">Erreur JS: ' + e.message.replace(/</g,'&lt;') + '</div>';
+}
+
+// Init fiches inline (tabs + panels)
+try { if (typeof initFiches === 'function') initFiches(); } catch(e) {
+  console.error('Fiches init error:', e);
+}
 </script>
 
 </body>
