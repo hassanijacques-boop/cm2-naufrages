@@ -1777,6 +1777,10 @@ function renderFichesPanel(tab) {
   });
   
   container.innerHTML = html;
+  
+  // Auto-open first session for immediate visibility
+  const first = container.querySelector('details');
+  if (first) first.open = true;
 }
 
 // ===== GÉNÉRATEUR IA =====
@@ -2297,6 +2301,10 @@ function renderProgressions() {
   });
   
   container.innerHTML = html;
+  
+  // Auto-open first category
+  const firstCat = container.querySelector('details');
+  if (firstCat) firstCat.open = true;
 }
 
 // Init progressions on load
