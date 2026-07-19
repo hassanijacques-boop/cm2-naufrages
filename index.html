@@ -903,6 +903,7 @@ function collapseAll() { document.querySelectorAll('details').forEach(d => d.ope
 </section>
 
 <footer>
+  <div id="jsStatus" style="font-size:0.7em;color:#94a3b8;margin-bottom:4px;"></div>
   Projet CM1/CM2 "Les Naufragés de l'Îlot Perdu" — Jacques Hassani Moustoifa<br>
   École La Rose, Handrema (Bandraboua) • CAPPEI VAE • 2026<br>
   <a href="#" onclick="expandAll()">📂 Tout déplier</a> • <a href="#" onclick="collapseAll()">📁 Tout replier</a> • <a href="#" onclick="window.print()">🖨️ Imprimer</a>
@@ -912,6 +913,11 @@ function collapseAll() { document.querySelectorAll('details').forEach(d => d.ope
 
 <script>
 // ===== ESPACE ENSEIGNANT — GESTION DES ONGLETS =====
+function updateJsStatus(msg) {
+  const el = document.getElementById('jsStatus');
+  if (el) el.textContent = (el.textContent ? el.textContent + ' | ' : '') + msg;
+}
+
 document.querySelectorAll('.ee-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.ee-tab').forEach(t => t.classList.remove('active'));
@@ -2297,11 +2303,13 @@ function renderProgressions() {
 document.addEventListener('DOMContentLoaded', () => {
   try {
     renderProgressions();
-    document.getElementById('progressionsContainer') && document.getElementById('progressionsContainer').style.setProperty('display', 'block', 'important');
+    const pCount = document.querySelectorAll('#progressionsContainer details').length;
+    updateJsStatus('progressions: ' + pCount + ' catégories ✅');
   } catch(e) {
     console.error('Progressions error:', e);
     const c = document.getElementById('progressionsContainer');
-    if (c) c.innerHTML = '<div class="box red">⚠️ Erreur: ' + e.message + '</div>';
+    if (c) c.innerHTML = '<div class="box red">⚠️ Erreur: ' + e.message.replace(/</g,'&lt;') + '</div>';
+    updateJsStatus('progressions: ❌ ' + e.message);
   }
 });
 const sections = document.querySelectorAll('section[id]');
