@@ -822,21 +822,33 @@ c.innerHTML=`<textarea id="nt" class="in" style="min-height:150px">${n}</textare
 // Liste d'élèves
 function renderEleves(c){
 const d=JSON.parse(localStorage.getItem('eleves')||'{"list":[""]}');
-let h='<div class="box b">👥 <strong>Liste des élèves</strong> — 23 places.</div>';
+let h='<div class="box b">👥 <strong>Liste des élèves</strong> — 23 places. Le nom est sauvegardé automatiquement.</div>';
 h+='<div id="elList">';
 for(let i=0;i<23;i++){
 const nom=d.list[i]||'';
 h+=`<div style="display:flex;gap:4px;margin:3px 0;align-items:center">
   <span style="font-size:.75em;color:#94a3b8;min-width:20px">${i+1}.</span>
-  <input class="in" style="flex:1" value="${nom}" placeholder="Élève ${i+1}..." onchange="uEl(${i},this.value)">
-  <input type="checkbox" ${nom?'':'disabled'} onchange="uElCheck(${i},this.checked)">
+  <input class="in" style="flex:1" id="el${i}" value="${nom}" placeholder="Élève ${i+1}..." onkeyup="elSave(${i})">
+  <input type="checkbox" ${nom?'':'disabled'} onchange="elCheck(${i},this.checked)">
 </div>`;
 }
-h+='</div><div style="margin-top:6px"><button class="btn pri" onclick="localStorage.setItem(\'eleves\',JSON.stringify({list:document.querySelectorAll(\'#elList input[type=text]\').length?Array.from(document.querySelectorAll(\'#elList input[type=text]\')).map(i=>i.value):[\"\"]}))">💾 Enregistrer</button></div>';
+h+='</div>';
 c.innerHTML=h;
 }
-window.uEl=function(i,v){const d=JSON.parse(localStorage.getItem('eleves')||'{"list":[""]}');d.list[i]=v;localStorage.setItem('eleves',JSON.stringify(d));};
-window.uElCheck=function(i,v){const d=JSON.parse(localStorage.getItem('eleves')||'{"list":[""]}');const c=JSON.parse(localStorage.getItem('elCheck')||'{}');c[i]=v;localStorage.setItem('elCheck',JSON.stringify(c));};
+window.elSave=function(i){
+const v=document.getElementById('el'+i).value;
+const d=JSON.parse(localStorage.getItem('eleves')||'{"list":[]}');
+d.list[i]=v;
+localStorage.setItem('eleves',JSON.stringify(d));
+// Activer la checkbox
+const cb=document.getElementById('el'+i).nextElementSibling;
+if(cb&&v){cb.disabled=false;}
+};
+window.elCheck=function(i,v){
+const c=JSON.parse(localStorage.getItem('elCheck')||'{}');
+c[i]=v;
+localStorage.setItem('elCheck',JSON.stringify(c));
+};
 // Grille LSU
 function renderLSU(c){
 const comps={
