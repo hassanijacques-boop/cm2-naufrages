@@ -1811,12 +1811,23 @@ function renderGenerator(container) {
     </div>
     
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-      <button class="ee-btn primary" onclick="genererFicheIA()" ${!key ? 'disabled style="opacity:0.5;"' : ''}>🤖 Générer la fiche</button>
+      <button class="ee-btn primary" id="genBtn" onclick="genererFicheIA()">🤖 Générer la fiche</button>
       <span id="genStatus" style="font-size:0.85em;color:#64748b;"></span>
     </div>
     
     <div id="genResult" style="margin-top:12px;"></div>
   `;
+  
+  // Activer/désactiver le bouton selon la clé API
+  const btn = document.getElementById('genBtn');
+  const key = localStorage.getItem('groq_api_key');
+  if (!key) {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+  } else {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
 }
 
 async function genererFicheIA() {
@@ -1902,6 +1913,9 @@ function saveGroqKey() {
   localStorage.setItem('groq_api_key', key);
   document.getElementById('groqStatus').innerHTML = '✅ Clé enregistrée localement.';
   toast('✅ Clé API enregistrée');
+  // Mettre à jour le bouton du générateur si visible
+  const genBtn = document.getElementById('genBtn');
+  if (genBtn) { genBtn.disabled = false; genBtn.style.opacity = '1'; }
 }
 
 function toggleGroqKey() {
