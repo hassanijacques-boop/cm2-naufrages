@@ -536,7 +536,29 @@ function rF(k){
 const c=document.getElementById('fp');if(!c)return;
 document.querySelectorAll('#ft .tab').forEach(t=>t.classList.remove('on'));
 document.querySelector(`#ft .tab[data-ft="${k}"]`)?.classList.add('on');
-if(k==='gen'){c.innerHTML='<div class="box y">🤖 Générateur IA — configure ta clé API dans <a href="#reg">⚙️ Réglages</a></div>';return;}
+if(k==='gen'){
+  const key=localStorage.getItem('gk');
+  c.innerHTML=`<div class="box g" style="margin-bottom:8px"><strong>🤖 Générateur de fiche de préparation</strong><br>Remplis les champs et clique sur Générer.${!key?'<br><span style="color:#dc2626">⚠️ Configure d\'abord la clé API dans <a href="#reg" style="color:#3b82f6">⚙️ Réglages</a></span>':' ✅ Clé API OK'}</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin-bottom:8px">
+    <div><label style="font-size:.7em;font-weight:600">Période</label><select id="gP" class="in"><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option></select></div>
+    <div><label style="font-size:.7em;font-weight:600">Niveau</label><select id="gN" class="in"><option>CM1/CM2</option><option>CM1</option><option>CM2</option></select></div>
+    <div><label style="font-size:.7em;font-weight:600">Domaine</label><select id="gD" class="in" onchange="upGO()"><option>Français</option><option>Lecture/Fluence</option><option>Production écrits</option><option>Étude langue</option><option>Mathématiques</option><option>Histoire</option><option>Géographie</option><option>Sciences</option><option>EPS</option><option>Anglais</option><option>Arts</option><option>EMC</option></select></div>
+  </div>
+  <div style="margin-bottom:6px"><label style="font-size:.7em;font-weight:600">Titre</label><input id="gT" class="in" placeholder="Ex: Découverte de la source d'eau douce"></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;margin-bottom:6px">
+    <div><label style="font-size:.7em;font-weight:600">Durée</label><select id="gDu" class="in"><option>45 min</option><option selected>1h</option><option>1h15</option><option>1h30</option><option>2h</option></select></div>
+    <div><label style="font-size:.7em;font-weight:600">Séance n°</label><input id="gNum" class="in" type="number" min="1" max="10" value="1"></div>
+    <div><label style="font-size:.7em;font-weight:600">Objectif</label><select id="gO" class="in"><option value="">Choisis un domaine d'abord…</option></select></div>
+  </div>
+  <div style="margin-bottom:6px"><label style="font-size:.7em;font-weight:600">Infos supplémentaires (optionnel)</label><textarea id="gX" class="in" style="min-height:50px" placeholder="Mur de mots, lien séance précédente, difficultés…"></textarea></div>
+  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+    <button class="btn pri" id="gBtn" onclick="genFiche()" ${!key?'disabled style="opacity:.5"':''}>🤖 Générer</button>
+    <span id="gSt" style="font-size:.82em;color:#64748b"></span>
+  </div>
+  <div id="gRes" style="margin-top:8px"></div>`;
+  upGO();
+  return;
+}
 const d=FS[k];if(!d)return;
 let h='';d.s.forEach(s=>{
 h+=`<details style="margin:4px 0"><summary>S${s.n} — ${s.ti} <span style="color:#64748b;font-weight:400;font-size:.8em">${s.du} • ${s.do}</span></summary><div class="body">
@@ -552,6 +574,62 @@ ${s.ph.map(p=>`<tr><td><strong>${p.p}</strong></td><td>${p.t}</td><td>${p.m}</td
 c.innerHTML=h;
 const f=c.querySelector('details');if(f)f.open=true;
 }
+// Objectifs par domaine
+const GObj={
+Français:['Lire/comprendre un texte','Identifier nature/fonction des mots','Analyser une phrase','Rédiger un paragraphe','Utiliser le vocabulaire de l\'aventure'],
+'Lecture/Fluence':['Lire à voix haute avec fluidité','Améliorer sa vitesse MCLM','Lire avec expressivité','Comprendre un texte en autonomie','Automatiser le décodage'],
+'Production écrits':['Rédiger 15-20 lignes','Utiliser les connecteurs','Employer passé simple/imparfait','Écrire un dialogue','Structurer un récit'],
+'Étude langue':['Identifier les connecteurs','Accorder le participe passé','Conjuguer aux temps du récit','Reconnaître les classes de mots','Orthographier les mots invariables'],
+Mathématiques:['Résoudre un problème à plusieurs étapes','Maîtriser les 4 opérations','Utiliser fractions/décimaux','Calculer périmètres/aires','Appliquer la proportionnalité'],
+Histoire:['Se repérer sur une frise','Comprendre une période','Analyser un document','Identifier causes/conséquences','Mémoriser des repères'],
+Géographie:['Se repérer sur un planisphère','Identifier continents/océans','Lire une carte','Situer la France et Mayotte','Comprendre les climats'],
+Sciences:['Identifier besoins des êtres vivants','Comprendre états de l\'eau','Observer le système solaire','Comprendre le corps humain','Suivre une démarche scientifique'],
+EPS:['Coopérer en jeu collectif','Se repérer dans l\'espace','Courir sur la durée','Développer sa coordination','Respecter les règles'],
+Anglais:['Se présenter (nom, âge)','Comprendre des consignes','Nommer couleurs/nombres','Dire le temps qu\'il fait','Parler de ses goûts'],
+Arts:['Découvrir les couleurs','Réaliser une production collective','Illustrer un texte','Utiliser la gouache','Observer et reproduire'],
+EMC:['Respecter les règles de vie','Participer à un débat','Distinguer droits/devoirs','S\'engager dans un projet','Développer son esprit critique']
+};
+window.upGO=function(){
+const d=document.getElementById('gD')?.value;if(!d)return;
+const s=document.getElementById('gO');if(!s)return;
+const obj=GObj[d]||[];
+s.innerHTML='<option value="">Choisis un objectif…</option>';
+obj.forEach(o=>{s.innerHTML+=`<option value="${o}">${o}</option>`;});
+s.innerHTML+='<option value="__custom__">✏️ Personnalisé…</option>';
+};
+window.genFiche=async function(){
+const key=localStorage.getItem('gk');if(!key){alert('Configure la clé API dans ⚙️ Réglages');return;}
+const st=document.getElementById('gSt');const res=document.getElementById('gRes');
+const peri=document.getElementById('gP').value,niv=document.getElementById('gN').value;
+const dom=document.getElementById('gD').value,titre=document.getElementById('gT').value.trim();
+const duree=document.getElementById('gDu').value,num=document.getElementById('gNum').value;
+const obj=document.getElementById('gO').value;const extra=document.getElementById('gX').value.trim();
+if(!titre){st.textContent='❌ Remplis le titre';return;}
+st.textContent='⏳ Génération en cours…';res.innerHTML='';
+try{
+const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+method:'POST',
+headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
+body:JSON.stringify({
+model:'llama-3.3-70b-versatile',
+messages:[
+{role:'system',content:'Tu es un enseignant expert en pédagogie explicite (CP-CM2).'},
+{role:'user',content:`Génère une fiche de préparation complète pour :
+NIVEAU: ${niv}, PÉRIODE: ${peri}, SÉANCE N°${num}
+TITRE: ${titre}, DOMAINE: ${dom}, DURÉE: ${duree}
+OBJECTIF: ${obj}${extra?'\nCONTEXTE: '+extra:''}
+
+Structure obligatoire en 5 phases: Rappel flash (5min) → Modelage (10-15min) → Pratique guidée (10-15min) → Pratique autonome différenciée (15-20min) → Bilan (5min).
+Inclure: différenciation 3 niveaux (N1 Guidé/N2 Standard/N3 Défi), adaptation pour élève à lenteur graphique, matériel nécessaire.`}
+],
+temperature:0.7,max_tokens:2048
+})});
+if(!r.ok){const e=await r.text();throw new Error(e.includes('401')?'Clé invalide':'Erreur '+r.status);}
+const d=await r.json();const txt=d.choices[0].message.content;
+res.innerHTML=`<div class="box g">✅ Fiche générée</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;white-space:pre-wrap;font-size:.85em;max-height:500px;overflow-y:auto">${txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;
+st.textContent='✅ Terminé';
+}catch(e){st.textContent='❌ '+e.message;res.innerHTML=`<div class="box r">❌ ${e.message}</div>`;}
+};
 </script>
 </section>
 
@@ -664,7 +742,9 @@ c.innerHTML=`<textarea id="nt" class="in" style="min-height:150px">${n}</textare
 <script>
 (function(){const k=localStorage.getItem('gk');if(k){document.getElementById('gk').value=k;document.getElementById('gks').textContent='✅ Clé configurée';}})();
 function sGK(){const k=document.getElementById('gk').value.trim();if(!k.startsWith('gsk_')){alert('La clé doit commencer par gsk_');return;}
-localStorage.setItem('gk',k);document.getElementById('gks').textContent='✅ Clé enregistrée';}
+localStorage.setItem('gk',k);document.getElementById('gks').textContent='✅ Clé enregistrée';
+// Activer le bouton du générateur si visible
+const b=document.getElementById('gBtn');if(b){b.disabled=false;b.style.opacity='1';}}
 </script>
 </section>
 
