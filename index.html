@@ -1986,7 +1986,11 @@ function renderGroqKey() {
 
 // Init fiches tabs on load
 document.addEventListener('DOMContentLoaded', () => {
-  initFiches();
+  try {
+    initFiches();
+  } catch(e) {
+    console.error('Fiches error:', e);
+  }
 });
 
 // ===== PROGRESSIONS PAR MATIÈRE =====
@@ -2291,7 +2295,14 @@ function renderProgressions() {
 
 // Init progressions on load
 document.addEventListener('DOMContentLoaded', () => {
-  renderProgressions();
+  try {
+    renderProgressions();
+    document.getElementById('progressionsContainer') && document.getElementById('progressionsContainer').style.setProperty('display', 'block', 'important');
+  } catch(e) {
+    console.error('Progressions error:', e);
+    const c = document.getElementById('progressionsContainer');
+    if (c) c.innerHTML = '<div class="box red">⚠️ Erreur: ' + e.message + '</div>';
+  }
 });
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('nav a:not([href^="#"])');
