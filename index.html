@@ -855,7 +855,13 @@ function collapseAll() { document.querySelectorAll('details').forEach(d => d.ope
     Progressions détaillées par discipline sur les 5 périodes. Clique sur une matière pour voir le détail.
   </p>
 
-  <div id="progressionsContainer"></div>
+  <div id="progressionsContainer">
+    <div class="box yellow" style="margin:12px 0;">
+      <strong>⏳ Chargement des progressions…</strong><br>
+      Si ce message reste affiché, le JavaScript ne s'est pas exécuté.
+      Essaie de rafraîchir la page (F5 ou Ctrl+F5).
+    </div>
+  </div>
 </section>
 
 <!-- ============================================================ -->
