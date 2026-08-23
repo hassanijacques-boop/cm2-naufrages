@@ -820,10 +820,11 @@ c.innerHTML=`<textarea id="nt" class="in" style="min-height:150px">${n}</textare
 <div style="margin-top:6px"><button class="btn pri" onclick="localStorage.setItem('notes',document.getElementById('nt').value)">💾 Enregistrer</button></div>`;
 }
 // Liste d'élèves
+const LISTE_DEFAUT={0:'Fahym Ben Mouhamadi CHEBANI',1:'Louqmân Ibne Moustakima DOUKAINI',2:'Abriel Essam MOGNE',3:'Djémoune ABDALLAH',4:'Léane ABDOU',5:'Abdoulfatahou ABDOU SAID',6:'Zaikam AHAMADI',7:'Madjidou AHAMED',8:'Zaïm AMBDIRAHAMANE',9:'Abdallah ANLI',10:'Kala Safia BOURA',11:'Amsah CHEBANI',12:'Ounays Ben CHEBANI',13:'Wassila DOUHOUCHINA',14:'Nisra HAMIDOUNI',15:'Naktabis HASSANI MOUSTOIFA',16:'Ardati-Laura IBRAHIMA',17:'Anrabia IBRAHIME',18:'Imraya Salama IBRAHIM SAÏD',19:'Rayana KAMAL',20:'Yasra MADI',21:'Nasserdine MOHAMED',22:'Nazli MOHAMED',23:'Azad SAID MCHANGAMA',24:'Roukaya SOUF',25:'Faïd SOULAIMANA',26:'Aliam Assoumane YASSINE'};
 function renderEleves(c){
-const d=JSON.parse(localStorage.getItem('eleves')||'{}');
-let h='<div class="box b">👥 <strong>Liste des élèves</strong> — 23 places.</div><div style="max-height:500px;overflow-y:auto">';
-for(let i=0;i<23;i++){
+const d=JSON.parse(localStorage.getItem('eleves')||'null')||LISTE_DEFAUT;
+let h='<div class="box b">👥 <strong>Liste des élèves</strong> — 27 élèves (3 CM1 + 24 CM2).</div><div style="max-height:500px;overflow-y:auto">';
+for(let i=0;i<27;i++){
 const nom=d[i]||'';
 h+=`<div style="display:flex;gap:4px;margin:3px 0;align-items:center">
 <span style="font-size:.75em;color:#94a3b8;min-width:18px">${i+1}.</span>
